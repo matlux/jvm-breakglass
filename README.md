@@ -23,7 +23,7 @@ How to install this with Spring
 
 * insert the dependency inside your maven project
 
-```jade
+```xml
     <dependency>
       <groupId>net.matlux</groupId>
       <artifactId>repl-bootloader</artifactId>
@@ -32,7 +32,7 @@ How to install this with Spring
 
 * add the following bean to your Spring config
 
-```jade
+```xml
     <bean id="repl" class="net.matlux.NreplServerWithSpringLog4jStartup">
       <constructor-arg index="0" value="1234" />
     </bean>
@@ -116,7 +116,7 @@ the server will listen onto the port 1234
 
 ## programatically
 
-```jade
+```clojure
     (require '[clojure.tools.nrepl :as repl])
     (with-open [conn (repl/connect :port 1111)]
      (-> (repl/client conn 1000)
@@ -146,11 +146,13 @@ This example filters on a regex. It retrieves property keys which start with "so
 
 ## Coherence example: Retrieve the number of object in a Cache
 
+```clojure
     (def all-filter (new AlwaysFilter))
     (def nodeCache (Caches/getCache "cachename")
     (let [all-filter (new AlwaysFilter)
       nodeCache (Caches/getCache "cachename")]
     (. (. nodeCache entrySet all-filter) size))
+```
 
 
 ## Introspect into a Java bean (not a Spring one this time...)
