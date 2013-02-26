@@ -99,7 +99,7 @@ For nRepl server and Spring support use the following class:
 
 Add the following bean to your Spring config:
 
-```jade
+```xml
     <bean id="repl" class="net.matlux.ReplStartup">
       <constructor-arg index="0" value="1234" />
     </bean>
