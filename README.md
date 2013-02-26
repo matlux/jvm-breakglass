@@ -24,18 +24,18 @@ How to install this with Spring
 * insert the dependency inside your maven project
 
 ```xml
-    <dependency>
-      <groupId>net.matlux</groupId>
-      <artifactId>repl-bootloader</artifactId>
-    </dependency>
+<dependency>
+  <groupId>net.matlux</groupId>
+  <artifactId>repl-bootloader</artifactId>
+</dependency>
 ```
 
 * add the following bean to your Spring config
 
 ```xml
-    <bean id="repl" class="net.matlux.NreplServerWithSpringLog4jStartup">
-      <constructor-arg index="0" value="1234" />
-    </bean>
+<bean id="repl" class="net.matlux.NreplServerWithSpringLog4jStartup">
+  <constructor-arg index="0" value="1234" />
+</bean>
 ```
 
 1234 is the port number.
