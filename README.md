@@ -73,8 +73,10 @@ Why are there 3 classes available?
 
 Use the following class
 
+```java
     import net.matlux.ReplStartup
     new ReplStartup(1234);
+```
 
 Then access the repl via telnet
 
@@ -86,9 +88,10 @@ You don't need a repl to access this version. But you can't use a client to prog
 
 instanciate the following class:
 
+```java
     import net.matlux.NreplServerStartup;
     new NreplServerStartup(port); //start server listening onto port number
-
+```
 
 ## nRepl hook for Spring and log4j applications
 
@@ -132,17 +135,23 @@ Also see quick demo above.
 
 ## retrieve the list of System properties from the java process
 
+```clojure
     (filter #(re-matches #"[so].*" (key %)) (into {} (System/getProperties)))
+```
 
 This example filters on a regex. It retrieves property keys which start with "so"
 
 ## Terminate the process ;)
 
+```clojure
     (System/exit 0)
+```
 
 ## Print hello on the process console
 
+```clojure
     ((System.out/println "hello"))
+```
 
 ## Coherence example: Retrieve the number of object in a Cache
 
@@ -157,11 +166,15 @@ This example filters on a regex. It retrieves property keys which start with "so
 
 ## Introspect into a Java bean (not a Spring one this time...)
 
+```clojure
     (bean obj)
+```
 
 ## Introspect into a Java Object
 
+```clojure
     (obj2map myObject)
+```
 
 See src/test//cl_java_introspector/core.clj for details implementation.
 
@@ -169,27 +182,32 @@ See src/test//cl_java_introspector/core.clj for details implementation.
 
 ### Retrieve a Spring bean called "mybean"
 
+```clojure
     (import 'net.matlux.NreplServerWithSpringLog4jStartup)
-
     (. NreplServerWithSpringLog4jStartup/instance getObj "mybean")
+```
 
 ### Retrieve a list of Spring beans
 
+```clojure
     (. (. NreplServerWithSpringLog4jStartup/instance getApplicationContext) getBeanDefinitionNames)
-
+```
 
 ## Special  for `NreplServerStartup`
 
 ### Retrieve a Spring bean called "mybean"
 
+```clojure
     (import 'net.matlux.NreplServerStartup)
 
     (. NreplServerStartup/instance getObj "mybean")
+```
 
 ### Retrieve a list of Spring beans
 
+```clojure
     (. (. NreplServerStartup/instance getApplicationContext) getBeanDefinitionNames)
-
+```
 
 ## License
 
