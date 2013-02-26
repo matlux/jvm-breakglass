@@ -23,10 +23,12 @@ How to install this with Spring
 
 * insert the dependency inside your maven project
 
-renders `<dependency>
+```jade
+    <dependency>
       <groupId>net.matlux</groupId>
       <artifactId>repl-bootloader</artifactId>
     </dependency>`
+```
 
 * add the following bean to your Spring config
 
