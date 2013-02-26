@@ -44,11 +44,17 @@ Quick demonstration of this project
 -----------------------------------
 
 * Compile this project
+
     mvn clean install
+
 * Start the server with the NreplServerStartup
+
     ./startServer.sh
+
 * Start the programatic client which introspects into the Java Objects
+
     ./clj.sh -m cl-java-introspector.core
+
 
 What if I don't use Spring?
 ---------------------------
