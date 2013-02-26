@@ -13,8 +13,8 @@ What is this project about?
 
 nRepl is easy to start in Clojure but it needs a tiny bit of work to inject it into your java process. If your using Spring and Java, this project has done that for you. This project is a Maven module that you can integrate in your java project and inject easily the Repl in your application.
 
-How to install this
--------------------
+How to install this with Spring
+-------------------------------
 
 * clone this project
 * compile the project
@@ -36,10 +36,30 @@ How to install this
 
 1234 is the port number.
 
+Quick demonstration of this project
+-----------------------------------
+
+* Compile this project
+    mvn clean install
+* Start the server with the NreplServerStartup
+    ./startServer.sh
+* Start the programatic client which introspects into the Java Objects
+    ./clj.sh -m cl-java-introspector.core
+
 What if I don't use Spring?
 ---------------------------
 
-There are 3 classes available:
+use
+
+* net.matlux.NreplServerStartup
+
+instead of
+
+* net.matlux.NreplServerWithSpringLog4jStartup
+
+
+Why are there 3 classes available?
+----------------------------------
 
 * net.matlux.ReplStartup
 * net.matlux.NreplServerStartup
@@ -98,6 +118,8 @@ the server will listen onto the port 1234
 
 The above sends an expression "(+ 1 1)" to be evaluated remotely. See [nrepl](https://github.com/clojure/tools.nrepl) website for more details.
 
+Also see quick demo above.
+
 # Once you have the nRepl running inside your process. What can you do?
 
 ## retrieve the list of System properties from the java process
@@ -126,6 +148,12 @@ This example filters on a regex. It retrieves property keys which start with "so
 ## Introspect into a Java bean (not a Spring one this time...)
 
     (bean obj)
+
+## Introspect into a Java Object
+
+    (obj2map myObject)
+
+See src/test//cl_java_introspector/core.clj for details implementation.
 
 ## Special for `NreplServerWithSpringLog4jStartup`
 

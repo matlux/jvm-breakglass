@@ -3,7 +3,13 @@ package net.matlux;
 
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+
+import net.matlux.testobjects.Address;
+import net.matlux.testobjects.Department;
+import net.matlux.testobjects.Employee;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +26,8 @@ import clojure.lang.RT;
 public class NreplServerStartup 
 {
 	
-	final static public int a=1225;
 	private Map<String, Object> objMap = new HashMap<String, Object>();
+	final static public int a=1225;
 
 
 	static public NreplServerStartup instance=null;
@@ -44,6 +50,7 @@ public class NreplServerStartup
     	}
     	
         instance=this;
+        setupTestData();
     }
 
     public static void main(String[] args) throws Exception {
@@ -52,8 +59,24 @@ public class NreplServerStartup
     		port = Integer.parseInt(args[0]);
     	}
     		
+    	;
+
     	new NreplServerStartup(port);
     }
+
+    
+	private void setupTestData() {
+		// This is a nice nested object structure
+		Department department = new Department("The Art Department",0L);
+		department.add(new Employee("Bob","Dilan",new Address("1 Mayfair","SW1","London")));
+		department.add(new Employee("Mick","Jagger",new Address("1 Time Square",null,"NY")));
+		objMap.put("department", department);
+		Set<Object> myFriends = new HashSet<Object>();
+		myFriends.add(new Employee("Keith","Richard",new Address("2 Mayfair","SW1","London")));
+		myFriends.add(new Employee("Nina","Simone",new Address("1 Gerards Street","12300","Smallville")));
+		objMap.put("myFriends", myFriends);
+		objMap.put("nullValue", null);
+	}
 
 	public Object getObj(String key) {
 		return objMap.get(key);
