@@ -176,6 +176,26 @@ This example filters on a regex. It retrieves property keys which start with "so
     (obj2map myObject)
 ```
 
+For example:
+
+```java
+        Department department = new Department("The Art Department",0L);
+        department.add(new Employee("Bob","Dilan",new Address("1 Mayfair","SW1","London")));
+        department.add(new Employee("Mick","Jagger",new Address("1 Time Square",null,"NY")));
+        objMap.put("department", department);
+        Set<Object> myFriends = new HashSet<Object>();
+        myFriends.add(new Employee("Keith","Richard",new Address("2 Mayfair","SW1","London")));
+        myFriends.add(new Employee("Nina","Simone",new Address("1 Gerards Street","12300","Smallville")));
+        objMap.put("myFriends", myFriends);
+        objMap.put("nullValue", null);
+```
+
+becomes
+
+```
+[{objMap {myFriends [{address {city Smallville, zipcode 12300, street 1 Gerards Street}, lastname Simone, firstname Nina} {address {city London, zipcode SW1, street 2 Mayfair}, lastname Richard, firstname Keith}], nullValue nil, department {id 0, name The Art Department, employees [{address {city London, zipcode SW1, street 1 Mayfair}, lastname Dilan, firstname Bob} {address {city NY, zipcode nil, street 1 Time Square}, lastname Jagger, firstname Mick}]}}} nil]
+```
+
 See src/test//cl_java_introspector/core.clj for details implementation.
 
 ## Special for `NreplServerWithSpringLog4jStartup`
