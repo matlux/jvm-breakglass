@@ -27,14 +27,16 @@ How to install this with Spring
     <dependency>
       <groupId>net.matlux</groupId>
       <artifactId>repl-bootloader</artifactId>
-    </dependency>`
+    </dependency>
 ```
 
 * add the following bean to your Spring config
 
+```jade
     <bean id="repl" class="net.matlux.NreplServerWithSpringLog4jStartup">
       <constructor-arg index="0" value="1234" />
     </bean>
+```
 
 1234 is the port number.
 
@@ -97,9 +99,11 @@ For nRepl server and Spring support use the following class:
 
 Add the following bean to your Spring config:
 
+```jade
     <bean id="repl" class="net.matlux.ReplStartup">
       <constructor-arg index="0" value="1234" />
     </bean>
+```
 
 the server will listen onto the port 1234
 
@@ -112,11 +116,13 @@ the server will listen onto the port 1234
 
 ## programatically
 
+```jade
     (require '[clojure.tools.nrepl :as repl])
     (with-open [conn (repl/connect :port 1111)]
      (-> (repl/client conn 1000)
        (repl/message {:op :eval :code "(+ 1 1)"})
        repl/response-values))
+```
 
 The above sends an expression "(+ 1 1)" to be evaluated remotely. See [nrepl](https://github.com/clojure/tools.nrepl) website for more details.
 
