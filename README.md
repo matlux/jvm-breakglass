@@ -23,10 +23,10 @@ How to install this with Spring
 
 * insert the dependency inside your maven project
 
-    <dependency>
+renders `<dependency>
       <groupId>net.matlux</groupId>
       <artifactId>repl-bootloader</artifactId>
-    </dependency>
+    </dependency>`
 
 * add the following bean to your Spring config
 
