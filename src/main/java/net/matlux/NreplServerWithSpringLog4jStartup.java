@@ -7,6 +7,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import clojure.lang.Symbol;
 import clojure.lang.Var;
@@ -47,12 +48,7 @@ public class NreplServerWithSpringLog4jStartup implements ApplicationContextAwar
     }
 
     public static void main(String[] args) throws Exception {
-    	int port=DEFAULT_PORT;
-    	if(args.length > 0) {
-    		port = Integer.parseInt(args[0]);
-    	}
-    		
-    	new ReplStartup(port);
+    	ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("/spring/server-test.xml");
     }
 
 	public Object getObj(String beanName) {

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+       <bean id="address1"
+              class="net.matlux.testobjects.Address">
+              <constructor-arg index="0" value="1 Mayfair" />
+              <constructor-arg index="1" value="SW1" />
+              <constructor-arg index="2" value="London" />
+       </bean>
+       <bean id="employee1"
+              class="net.matlux.testobjects.Employee">
+              <constructor-arg index="0" value="Bob" />
+              <constructor-arg index="1" value="Dilan" />
+              <constructor-arg index="2" ref="address1" />
+       </bean>
+
+       <bean id="department"
+              class="net.matlux.testobjects.Department">
+              <constructor-arg index="0" value="The Art Department" />
+              <constructor-arg index="1" value="0" />
+       </bean>
+       <!-- <import resource="classpath:spring/dependency.xml" /> -->
+       <bean id="repl"
+              class="net.matlux.NreplServerWithSpringLog4jStartup">
+              <constructor-arg index="0" value="1112" />
+       </bean>
+</beans>

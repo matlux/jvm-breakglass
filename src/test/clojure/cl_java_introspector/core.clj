@@ -3,15 +3,9 @@
 (require '[clojure.tools.nrepl :as repl])
 
 (import '(net.matlux NreplServerStartup))
+(import '(net.matlux NreplServerWithSpringLog4jStartup))
 (import '(java.lang.reflect Modifier))
 
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
-
-
-;(. NreplServerStartup/instance getObj "department")
 
 
 
@@ -27,8 +21,14 @@
 
 
 
+(defn get-obj-methods [obj]
+  (let [obj2methods (fn [obj] (map #(do (.setAccessible % true) %) (into [] (. (. obj getClass) getDeclaredMethods))))
+        get-inst-methods (fn [fields] (filter #(not (Modifier/isStatic (.getModifiers %))) fields))
+        method2ref (fn [field obj] (.get field obj))
+        ]
 
-
+    (obj2methods obj)))
+;(get-obj-methods "")
 
 (defn obj2map [obj]
   (let [obj2fields (fn [obj] (map #(do (.setAccessible % true) %) (into [] (. (. obj getClass) getDeclaredFields))))
@@ -64,6 +64,7 @@
 (def code2inject
   "(import '(net.matlux NreplServerStartup))
    (import '(java.lang.reflect Modifier))
+   (import '(net.matlux NreplServerWithSpringLog4jStartup))
    (defn obj2map [obj]
    (let [obj2fields (fn [obj] (map #(do (.setAccessible % true) %) (into [] (. (. obj getClass) getDeclaredFields))))
         get-inst-fields (fn [fields] (filter #(not (Modifier/isStatic (.getModifiers %))) fields))
@@ -83,7 +84,11 @@
 
 (def code2execute
   "(obj2map NreplServerStartup/instance)
+   (into [] (.getBeanDefinitionNames (.getApplicationContext NreplServerWithSpringLog4jStartup/instance)))
+   (obj2map (.getObj NreplServerWithSpringLog4jStartup/instance \"department\"))
+   (obj2map (.getObj NreplServerWithSpringLog4jStartup/instance \"employee1\"))
    (obj2map nil)")
+
 
 (defn -main []
 
@@ -100,7 +105,10 @@
 
 (comment
   (obj2map department)
-  (obj2map NreplServerStartup/instance)
+  (obj2map NreplServerWithSpringLog4jStartup/instance)
   (obj2map nil)
+  (obj2map (.getObj NreplServerWithSpringLog4jStartup/instance "department"))
+
+  (println (remote-execute "localhost" 1112 code2execute2))
 
 )

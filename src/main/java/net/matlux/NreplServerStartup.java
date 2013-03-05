@@ -58,8 +58,6 @@ public class NreplServerStartup
     	if(args.length > 0) {
     		port = Integer.parseInt(args[0]);
     	}
-    		
-    	;
 
     	new NreplServerStartup(port);
     }
