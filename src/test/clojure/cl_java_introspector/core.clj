@@ -31,21 +31,21 @@
 ;(get-obj-methods "")
 
 (defn obj2map [obj level]
-  (let [obj2fields (fn [obj] (map #(do (.setAccessible % true) %) (into [] (. (. obj getClass) getDeclaredFields))))
-        get-inst-fields (fn [fields] (filter #(not (Modifier/isStatic (.getModifiers %))) fields))
-        field2ref (fn [field obj] (.get field obj))
-        ]
+  (if (zero? level) obj (let [obj2fields (fn [obj] (map #(do (.setAccessible % true) %) (into [] (. (. obj getClass) getDeclaredFields))))
+         get-inst-fields (fn [fields] (filter #(not (Modifier/isStatic (.getModifiers %))) fields))
+         field2ref (fn [field obj] (.get field obj))
+         ]
                                         ;(reduce #(assoc %1 (.getName %2) (field2value %2)) {} in-fields)
-    (cond (nil? obj) nil
-          (instance? java.lang.String obj) obj
-          (instance? java.lang.Number obj) obj
-          (instance? java.lang.Iterable obj) (into [] (map (fn [e] (if (zero? level) e (obj2map e (dec level)))) (into [] obj)))
-          (instance? java.util.Map obj) (let [m (into {} obj)
-                                              ks (keys m)
-                                              ]
-                                          (reduce #(assoc %1 %2 (if (zero? level) m (obj2map (m %2) (dec level)))) {} ks))
-          :else (reduce #(assoc %1 (.getName %2) (if (zero? level) (field2ref %2 obj) (obj2map (field2ref %2 obj) (dec level)))) {} (get-inst-fields (obj2fields obj))) )
-    ))
+     (cond (nil? obj) nil
+           (instance? java.lang.String obj) obj
+           (instance? java.lang.Number obj) obj
+           (instance? java.lang.Iterable obj) (into [] (map (fn [e] (obj2map e (dec level))) (into [] obj)))
+           (instance? java.util.Map obj) (let [m (into {} obj)
+                                               ks (keys m)
+                                               ]
+                                           (reduce #(assoc %1 %2 (obj2map (m %2) (dec level))) {} ks))
+           :else (reduce #(assoc %1 (.getName %2) (obj2map (field2ref %2 obj) (dec level))) {} (get-inst-fields (obj2fields obj))) )
+     )))
 
 
 
@@ -107,6 +107,7 @@
 
 (comment
   (obj2map department)
+  (obj2map NreplServerStartup/instance)
   (obj2map NreplServerWithSpringLog4jStartup/instance)
   (obj2map nil)
   (obj2map (.getObj NreplServerWithSpringLog4jStartup/instance "department"))
