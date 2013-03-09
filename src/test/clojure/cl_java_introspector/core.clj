@@ -19,9 +19,9 @@
 
 )
 
-(defn get-fields [obj] (map #(do (.setAccessible % true) %) (into [] (. (. obj getClass) getDeclaredFields))))
-(defn remove-static [fields] (filter #(not (Modifier/isStatic (.getModifiers %))) fields))
-(defn field2ref [field obj] (.get field obj))
+
+(defn member-field? [field] (not (Modifier/isStatic (.getModifiers field))))
+(defn get-member-fields [obj] (map #(vector (.getName %) (.get % obj)) (filter member-field? (map #(do (.setAccessible % true) %) (into [] (. (. obj getClass) getDeclaredFields))))))
 (def primitive? (some-fn string? number?))
 (def clojure-struct? (some-fn map? set? vector? list?))
 
@@ -29,10 +29,8 @@
   (cond
    ((some-fn nil? primitive? clojure-struct?) obj) obj
    (instance? java.lang.Iterable obj) (into [] obj)
-   (instance? java.util.Map obj) (let [m (into {} obj)
-                                       ks (keys m)]
-                                   (reduce #(assoc %1 %2 (m %2)) {} ks))
-   :else (reduce #(assoc %1 (.getName %2) (field2ref %2 obj) ) {} (remove-static (get-fields obj)))
+   (instance? java.util.Map obj) (reduce #(assoc %1 %2 ((into {} obj) %2)) {} (keys m))
+   :else (reduce #(let [[fname ob] %2] (assoc %1 fname ob )) {} (get-member-fields obj))
    ))
 
 (defn to-tree [to-map obj]
