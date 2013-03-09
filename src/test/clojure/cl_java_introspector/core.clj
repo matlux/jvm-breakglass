@@ -33,8 +33,7 @@
    :else (reduce #(let [[fname ob] %2] (assoc %1 fname ob )) {} (get-member-fields obj))
    ))
 
-(defn to-tree [to-map obj]
-  (clojure.walk/prewalk to-map obj ))
+(def to-tree (partial clojure.walk/prewalk to-map))
 
 
 ;(to-tree to-map NreplServerStartup/instance)
