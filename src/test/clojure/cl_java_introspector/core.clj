@@ -1,6 +1,7 @@
 (ns cl-java-introspector.core)
 
 (require '[clojure.tools.nrepl :as repl])
+(require '[clojure.walk :only [walk prewalk postwalk]])
 
 (import '(net.matlux NreplServerStartup))
 (import '(net.matlux NreplServerWithSpringLog4jStartup))
@@ -18,8 +19,36 @@
 
 )
 
+(defn obj2fields [obj] (map #(do (.setAccessible % true) %) (into [] (. (. obj getClass) getDeclaredFields))))
+
+(defn get-inst-fields [fields] (filter #(not (Modifier/isStatic (.getModifiers %))) fields))
+
+(defn field2ref [field obj] (.get field obj))
+
+(def primitive? (some-fn string? number?))
+(def clojure-struct? (some-fn map? set? vector? list?))
 
 
+(defn to-map [obj]
+  (cond
+   (nil? obj) nil
+   (primitive? obj) obj
+   (clojure-struct? obj) obj
+   (instance? java.lang.Iterable obj) (into [] obj)
+   (instance? java.util.Map obj) (let [m (into {} obj)
+                                       ks (keys m)]
+                                   (reduce #(assoc %1 %2 (m %2)) {} ks))
+   :else (reduce #(assoc %1 (.getName %2) (field2ref %2 obj) ) {} (get-inst-fields (obj2fields obj)))
+   ))
+
+(defn to-tree [to-map obj]
+
+  (clojure.walk/prewalk to-map obj )
+  )
+
+
+;(to-tree to-map NreplServerStartup/instance)
+;(obj2map NreplServerStartup/instance 50)
 
 (defn get-obj-methods [obj]
   (let [obj2methods (fn [obj] (map #(do (.setAccessible % true) %) (into [] (. (. obj getClass) getDeclaredMethods))))
