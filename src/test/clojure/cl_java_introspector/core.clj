@@ -31,9 +31,7 @@
 
 (defn to-map [obj]
   (cond
-   (nil? obj) nil
-   (primitive? obj) obj
-   (clojure-struct? obj) obj
+   ((some-fn nil? primitive? clojure-struct?) obj) obj
    (instance? java.lang.Iterable obj) (into [] obj)
    (instance? java.util.Map obj) (let [m (into {} obj)
                                        ks (keys m)]
@@ -42,9 +40,7 @@
    ))
 
 (defn to-tree [to-map obj]
-
-  (clojure.walk/prewalk to-map obj )
-  )
+  (clojure.walk/prewalk to-map obj ))
 
 
 ;(to-tree to-map NreplServerStartup/instance)
