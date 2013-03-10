@@ -46,7 +46,13 @@
         ]
 
     (obj2methods obj)))
+
+(defn get-method-names [obj] (map #(.getName %) (get-obj-methods obj)))
+
 ;(get-obj-methods "")
+;(->> NreplServerStartup/instance get-member-fields first second get-member-fields)
+;(->> NreplServerStartup/instance get-member-fields first second to-tree )
+
 
 (defn obj2map [obj level]
   (if (zero? level) obj (let [obj2fields (fn [obj] (map #(do (.setAccessible % true) %) (into [] (. (. obj getClass) getDeclaredFields))))
