@@ -25,18 +25,18 @@
 (def primitive? (some-fn string? number?))
 (def clojure-struct? (some-fn map? set? vector? list?))
 
-(def objfields-to-map (reduce #(let [[fname ob] %2] (assoc %1 fname ob )) {} (get-member-fields obj)))
+(defn objfields-to-map [obj] (reduce #(let [[fname ob] %2] (assoc %1 fname ob )) {} (get-member-fields obj)))
 
-(defn to-map [obj]
+(defn to-map [obj2map obj]
   ;(print "walk:") (prn obj)
   (cond
    ((some-fn nil? primitive? clojure-struct? keyword?) obj) obj
    (instance? java.lang.Iterable obj) (into [] obj)
    (instance? java.util.Map obj) (let [m (into {} obj)] (reduce #(assoc %1 (if (string? %2) (keyword %2) %2) (m %2)) {} (keys m)))
-   :else (reduce #(let [[fname ob] %2] (assoc %1 fname ob )) {} (get-member-fields obj))
+   :else (obj2map obj)
    ))
 
-(def to-tree (partial clojure.walk/prewalk to-map))
+(def to-tree (partial clojure.walk/prewalk (partial to-map objfields-to-map)))
 
 
 ;(to-tree NreplServerStartup/instance)
@@ -55,7 +55,9 @@
 ;(get-obj-methods "")
 ;(->> NreplServerStartup/instance get-member-fields first second get-member-fields)
 ;(->> NreplServerStartup/instance get-member-fields first second to-tree )
-;(->> (get (->> NreplServerStartup/instance get-member-fields first second to-tree ) "department") get-obj-methods first bean)
+;(->> NreplServerStartup/instance get-member-fields first second to-tree :department get-obj-methods first bean)
+;(->> (to-tree NreplServerStartup/instance) :objMap :department :employees second :lastname)
+
 
 
 (defn obj2map [obj level]
