@@ -26,17 +26,18 @@
 (def clojure-struct? (some-fn map? set? vector? list?))
 
 (defn to-map [obj]
+  ;(print "walk:") (prn obj)
   (cond
    ((some-fn nil? primitive? clojure-struct?) obj) obj
    (instance? java.lang.Iterable obj) (into [] obj)
-   (instance? java.util.Map obj) (reduce #(assoc %1 %2 ((into {} obj) %2)) {} (keys m))
+   (instance? java.util.Map obj) (let [m (into {} obj)] (reduce #(assoc %1 %2 (m %2)) {} (keys m)))
    :else (reduce #(let [[fname ob] %2] (assoc %1 fname ob )) {} (get-member-fields obj))
    ))
 
 (def to-tree (partial clojure.walk/prewalk to-map))
 
 
-;(to-tree to-map NreplServerStartup/instance)
+;(to-tree NreplServerStartup/instance)
 ;(obj2map NreplServerStartup/instance 50)
 
 (defn get-obj-methods [obj]
@@ -52,6 +53,7 @@
 ;(get-obj-methods "")
 ;(->> NreplServerStartup/instance get-member-fields first second get-member-fields)
 ;(->> NreplServerStartup/instance get-member-fields first second to-tree )
+;(->> (get (->> NreplServerStartup/instance get-member-fields first second to-tree ) "department") get-obj-methods first bean)
 
 
 (defn obj2map [obj level]
