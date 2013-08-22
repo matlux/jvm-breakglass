@@ -52,6 +52,11 @@
       <version>0.2.1</version>
     </dependency>
     <dependency>
+        <groupId>me.raynes</groupId>
+        <artifactId>fs</artifactId>
+        <version>1.4.5</version>
+    </dependency>
+    <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
         <version>1.6.3</version>
@@ -68,4 +73,10 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <repositories>
+    <repository>
+      <id>clojars.org</id>
+      <url>http://clojars.org/repo</url>
+    </repository>
+  </repositories>
 </project>

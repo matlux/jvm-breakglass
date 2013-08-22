@@ -11,5 +11,13 @@ public class Address {
 		this.zipcode = zipcode;
 		this.city = city;
 	}
+	
+	public String getStreet() {
+		return city;
+	}
+
+	public String getCity() {
+		return city;
+	}
 
 }

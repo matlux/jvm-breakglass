@@ -12,5 +12,10 @@ public class Employee {
 		this.lastname = lastname;
 		this.address = address;
 	}
+
+	public String getFirstname() {
+		return firstname;
+	}
+	
 	
 }

@@ -136,12 +136,40 @@
 
 
 (comment
+  
+  (use 'clojure.reflect 'clojure.pprint)
+  (use 'me.raynes.fs)
+  (use 'cl-java-introspector.core)
+
+  (to-tree NreplServerWithSpringLog4jStartup/instance)
+  (obj2map NreplServerWithSpringLog4jStartup/instance)
+  (obj2map (.getObj NreplServerWithSpringLog4jStartup/instance "department"))
+  (net.matlux.testobjects.Employee. "John" "Smith" (proxy [net.matlux.testobjects.Address] ["53 Victoria Str" "SE1 0LK" "London"] (boo [other] false)))
+  (pprint (reflect (.getObj NreplServerWithSpringLog4jStartup/instance "department")))
+  (print-table (sort-by :name (:members (reflect net.matlux.testobjects.Employee))))
+  (print-table (sort-by :name (filter :exception-types (:members (reflect net.matlux.testobjects.Employee)))))
+  (print-table (sort-by :name (filter :exception-types (:members (reflect (.getApplicationContext NreplServerWithSpringLog4jStartup/instance))))))
+  (print-table (sort-by :name (filter :exception-types (:members (reflect org.springframework.context.support.ClassPathXmlApplicationContext)))))
+  
+  (list-dir ".")
+  *cwd*
+  (hidden? ".")
+  (hidden? "pom.xml")
+  (hidden? ".classpath")
+  (directory? ".classpath")
+  (directory? ".")
+  (filter directory? (list-dir "."))
+  
+  
+  (pprint (reflect emp2))
+  
+  
+  (obj2map nil)
   (obj2map department)
   (obj2map NreplServerStartup/instance)
-  (obj2map NreplServerWithSpringLog4jStartup/instance)
-  (obj2map nil)
-  (obj2map (.getObj NreplServerWithSpringLog4jStartup/instance "department"))
-
+  
+  
   (println (remote-execute "localhost" 1112 code2execute2))
+  
 
 )
