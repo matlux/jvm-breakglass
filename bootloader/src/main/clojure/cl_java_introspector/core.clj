@@ -1,7 +1,7 @@
 (ns cl-java-introspector.core)
 
-(require '[clojure.tools.nrepl :as repl])
 (require '[clojure.walk :only [walk prewalk postwalk]])
+(use 'clojure.reflect 'clojure.pprint)
 
 (import '(net.matlux NreplServerStartup))
 (import '(net.matlux NreplServerWithSpringLog4jStartup))
@@ -18,16 +18,31 @@
 (def department (. NreplServerStartup/instance getObj "department"))
 
 )
+(defn get-beans []
+    (into [] (.getBeanDefinitionNames (.getApplicationContext NreplServerWithSpringLog4jStartup/instance)))  
+)
 
 
-(defn member-field? [field] (not (Modifier/isStatic (.getModifiers field))))
-(defn get-member-fields [obj] (map #(vector (keyword (.getName %)) (.get % obj)) (filter member-field? (map #(do (.setAccessible % true) %) (into [] (. (. obj getClass) getDeclaredFields))))))
+(defn get-bean [^String bean-name] 
+  (.getObj NreplServerWithSpringLog4jStartup/instance bean-name))
+
+(def get-obj get-bean)
+
+(defn methods-info [obj] 
+  (print-table (sort-by :name (filter :exception-types (:members (reflect obj))))))
+(defn fields-info [obj] 
+  (print-table (sort-by :name (filter :type (:members (reflect obj))))))
+(defn members-info [obj] 
+  (print-table (sort-by :name (:members (reflect obj)))))
+
+(defn field? [field] (not (Modifier/isStatic (.getModifiers field))))
+(defn get-fields [obj] (map #(vector (keyword (.getName %)) (.get % obj)) (filter field? (map #(do (.setAccessible % true) %) (into [] (. (. obj getClass) getDeclaredFields))))))
 (def primitive? (some-fn string? number?))
 (def clojure-struct? (some-fn map? set? vector? list?))
 
-(defn objfields-to-map [obj] (reduce #(let [[fname ob] %2] (assoc %1 fname ob )) {} (get-member-fields obj)))
+(defn- objfields-to-map [obj] (reduce #(let [[fname ob] %2] (assoc %1 fname ob )) {} (get-fields obj)))
 
-(defn to-map [obj2map obj]
+(defn- to-map [obj2map obj]
   ;(print "walk:") (prn obj)
   (cond
    ((some-fn nil? primitive? clojure-struct? keyword?) obj) obj
@@ -38,10 +53,6 @@
 
 (def to-tree (partial clojure.walk/prewalk (partial to-map objfields-to-map)))
 
-
-;(to-tree NreplServerStartup/instance)
-;(obj2map NreplServerStartup/instance 50)
-
 (defn get-obj-methods [obj]
   (let [obj2methods (fn [obj] (map #(do (.setAccessible % true) %) (into [] (. (. obj getClass) getDeclaredMethods))))
         get-inst-methods (fn [fields] (filter #(not (Modifier/isStatic (.getModifiers %))) fields))
@@ -51,14 +62,6 @@
     (obj2methods obj)))
 
 (defn get-method-names [obj] (map #(.getName %) (get-obj-methods obj)))
-
-;(get-obj-methods "")
-;(->> NreplServerStartup/instance get-member-fields first second get-member-fields)
-;(->> NreplServerStartup/instance get-member-fields first second to-tree )
-;(->> NreplServerStartup/instance get-member-fields first second to-tree :department get-obj-methods first bean)
-;(->> (to-tree NreplServerStartup/instance) :objMap :department :employees second :lastname)
-
-
 
 (defn obj2map [obj level]
   (if (zero? level) obj (let [obj2fields (fn [obj] (map #(do (.setAccessible % true) %) (into [] (. (. obj getClass) getDeclaredFields))))
@@ -79,97 +82,9 @@
 
 
 
-(defn remote-execute [hostname port code]
-  (try
-    (with-open [conn (repl/connect :host hostname :port port)]
-     (-> (repl/client conn 1000)
-       (repl/message {:op :eval :code code})
-       repl/response-values))
-     (catch java.net.ConnectException e
-         ;(println "Caught" (.getMessage e))
-         "cannot connect")
-     (finally
-          ;(println "")
-          )))
-
-
-(def code2inject
-  "(import '(net.matlux NreplServerStartup))
-   (import '(java.lang.reflect Modifier))
-   (import '(net.matlux NreplServerWithSpringLog4jStartup))
-   (defn obj2map [obj]
-   (let [obj2fields (fn [obj] (map #(do (.setAccessible % true) %) (into [] (. (. obj getClass) getDeclaredFields))))
-        get-inst-fields (fn [fields] (filter #(not (Modifier/isStatic (.getModifiers %))) fields))
-        field2ref (fn [field obj] (.get field obj))
-        ]
-                                        ;(reduce #(assoc %1 (.getName %2) (field2value %2)) {} in-fields)
-    (cond (nil? obj) nil
-          (instance? java.lang.String obj) obj
-          (instance? java.lang.Number obj) obj
-          (instance? java.lang.Iterable obj) (into [] (map (fn [e] (obj2map e)) (into [] obj)))
-          (instance? java.util.Map obj) (let [m (into {} obj)
-                                              ks (keys m)
-                                              ]
-                                          (reduce #(assoc %1 %2 (obj2map (m %2))) {} ks))
-          :else (reduce #(assoc %1 (.getName %2) (obj2map (field2ref %2 obj))) {} (get-inst-fields (obj2fields obj))) )
-    ))")
-
-(def code2execute
-  "(obj2map NreplServerStartup/instance)
-   (into [] (.getBeanDefinitionNames (.getApplicationContext NreplServerWithSpringLog4jStartup/instance)))
-   (obj2map (.getObj NreplServerWithSpringLog4jStartup/instance \"department\"))
-   (obj2map (.getObj NreplServerWithSpringLog4jStartup/instance \"employee1\"))
-   (obj2map nil)")
-
-
-(defn -main []
-
-  (println "introspecting objects:")
-  (remote-execute "localhost" 1112 code2inject)
-  (println (remote-execute "localhost" 1112 code2execute))
-  (System/exit 0)
-  )
 
 
 
 
 
 
-(comment
-  
-  (use 'clojure.reflect 'clojure.pprint)
-  (use 'me.raynes.fs)
-  (use 'cl-java-introspector.core)
-
-  (to-tree NreplServerWithSpringLog4jStartup/instance)
-  (obj2map NreplServerWithSpringLog4jStartup/instance)
-  (obj2map (.getObj NreplServerWithSpringLog4jStartup/instance "department"))
-  (net.matlux.testobjects.Employee. "John" "Smith" (proxy [net.matlux.testobjects.Address] ["53 Victoria Str" "SE1 0LK" "London"] (boo [other] false)))
-  (pprint (reflect (.getObj NreplServerWithSpringLog4jStartup/instance "department")))
-  (print-table (sort-by :name (:members (reflect net.matlux.testobjects.Employee))))
-  (print-table (sort-by :name (filter :exception-types (:members (reflect net.matlux.testobjects.Employee)))))
-  (print-table (sort-by :name (filter :exception-types (:members (reflect (.getApplicationContext NreplServerWithSpringLog4jStartup/instance))))))
-  (print-table (sort-by :name (filter :exception-types (:members (reflect org.springframework.context.support.ClassPathXmlApplicationContext)))))
-  
-  (list-dir ".")
-  *cwd*
-  (hidden? ".")
-  (hidden? "pom.xml")
-  (hidden? ".classpath")
-  (directory? ".classpath")
-  (directory? ".")
-  (filter directory? (list-dir "."))
-  
-  
-  (pprint (reflect emp2))
-  
-  
-  (obj2map nil)
-  (obj2map department)
-  (obj2map NreplServerStartup/instance)
-  
-  
-  (println (remote-execute "localhost" 1112 code2execute2))
-  
-
-)

@@ -3,18 +3,8 @@ package net.matlux;
 
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
-import net.matlux.testobjects.Address;
-import net.matlux.testobjects.Department;
-import net.matlux.testobjects.Employee;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 
 import clojure.lang.Symbol;
 import clojure.lang.Var;
@@ -39,7 +29,7 @@ public class NreplServerStartup
 
 
 
-    NreplServerStartup(int port) {
+    public NreplServerStartup(int port) {
     	System.out.println("starting ReplStartup on Port=" + port);
     	try {
         	USE.invoke(SERVER_SOCKET);
@@ -50,7 +40,6 @@ public class NreplServerStartup
     	}
     	
         instance=this;
-        setupTestData();
     }
 
     public static void main(String[] args) throws Exception {
@@ -63,18 +52,7 @@ public class NreplServerStartup
     }
 
     
-	private void setupTestData() {
-		// This is a nice nested object structure
-		Department department = new Department("The Art Department",0L);
-		department.add(new Employee("Bob","Dilan",new Address("1 Mayfair","SW1","London")));
-		department.add(new Employee("Mick","Jagger",new Address("1 Time Square",null,"NY")));
-		objMap.put("department", department);
-		Set<Object> myFriends = new HashSet<Object>();
-		myFriends.add(new Employee("Keith","Richard",new Address("2 Mayfair","SW1","London")));
-		myFriends.add(new Employee("Nina","Simone",new Address("1 Gerards Street","12300","Smallville")));
-		objMap.put("myFriends", myFriends);
-		objMap.put("nullValue", null);
-	}
+
 
 	public Object getObj(String key) {
 		return objMap.get(key);

@@ -14,8 +14,9 @@ CLOJURE=$CLOJURE:$REPO/commons-logging/commons-logging/1.1.1/commons-logging-1.1
 CLOJURE=$CLOJURE:$REPO/org/slf4j/slf4j-api/1.6.3/slf4j-api-1.6.3.jar
 CLOJURE=$CLOJURE:$REPO/me/raynes/fs/1.4.5/fs-1.4.5.jar
 CLOJURE=$CLOJURE:./src/test/clojure
-CLOJURE=$CLOJURE:target/repl-bootloader-1.0-SNAPSHOT.jar
+CLOJURE=$CLOJURE:$REPO/net/matlux/repl-bootloader/1.0-SNAPSHOT/repl-bootloader-1.0-SNAPSHOT.jar
+CLOJURE=$CLOJURE:$REPO/net/matlux/server-test/1.0-SNAPSHOT/server-test-1.0-SNAPSHOT.jar
 CLOJURE=$CLOJURE:${PWD}
+server-test-1.0-SNAPSHOT.jar
 
-
-java -cp "$CLOJURE" net.matlux.NreplServerWithSpringLog4jStartup "$@"
+java -cp "$CLOJURE" net.matlux.testserver.SpringServerExample "$@"
