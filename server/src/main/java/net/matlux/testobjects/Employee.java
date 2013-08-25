@@ -10,11 +10,19 @@ public class Employee {
 	public Employee(String firstname, String lastname, Address address) {
 		this.firstname = firstname;
 		this.lastname = lastname;
-		this.address = address;
+		this.setAddress(address);
 	}
 
 	public String getFirstname() {
 		return firstname;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 	
 	

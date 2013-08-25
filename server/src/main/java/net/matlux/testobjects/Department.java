@@ -13,6 +13,19 @@ public class Department {
 		this.name = name;
 		this.id = id;
 	}
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public List<Employee> getEmployees() {
+		return employees;
+	}
+	public void setEmployees(List<Employee> employees) {
+		this.employees = employees;
+	}
 
 	public void add(Employee employee) {
 		employees.add(employee);

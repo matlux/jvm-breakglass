@@ -3,28 +3,32 @@
 (require '[clojure.walk :only [walk prewalk postwalk]])
 (use 'clojure.reflect 'clojure.pprint)
 
-(import '(net.matlux NreplServerStartup))
-(import '(net.matlux NreplServerWithSpringLog4jStartup))
+(import '(net.matlux NreplServer))
+(import '(net.matlux NreplServerSpring))
 (import '(java.lang.reflect Modifier))
 
 
 
 
 (comment
-  (let [department (. NreplServerStartup/instance getObj "department")
+  (let [department (. NreplServer/instance getObj "department")
         fields (map #(do (.setAccessible % true) %) (into [] (. (. department getClass) getDeclaredFields)))]
     fields)
 
-(def department (. NreplServerStartup/instance getObj "department"))
+(def department (. NreplServer/instance getObj "department"))
 
 )
 (defn get-beans []
-    (into [] (.getBeanDefinitionNames (.getApplicationContext NreplServerWithSpringLog4jStartup/instance)))  
+    (into [] (.getBeanDefinitionNames (.getApplicationContext NreplServerSpring/instance)))  
+)
+(defn get-objs []
+    (into [] (.keySet NreplServerSpring/instance))
 )
 
 
+
 (defn get-bean [^String bean-name] 
-  (.getObj NreplServerWithSpringLog4jStartup/instance bean-name))
+  (.getObj NreplServerSpring/instance bean-name))
 
 (def get-obj get-bean)
 

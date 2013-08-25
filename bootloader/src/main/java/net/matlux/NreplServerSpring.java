@@ -16,12 +16,12 @@ import clojure.lang.RT;
  * Hello world!
  *
  */
-public class NreplServerWithSpringLog4jStartup implements ApplicationContextAware
+public class NreplServerSpring extends NreplServer implements ApplicationContextAware
 {
 	
-    private static final Logger LOG = LoggerFactory.getLogger(NreplServerWithSpringLog4jStartup.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NreplServerSpring.class);
 
-	static public NreplServerWithSpringLog4jStartup instance=null;
+	//static public NreplServerSpring instance=null;
 	
 	final static public int DEFAULT_PORT=1111;
     final static private Var USE = RT.var("clojure.core", "use");
@@ -31,8 +31,9 @@ public class NreplServerWithSpringLog4jStartup implements ApplicationContextAwar
     @Autowired
 	private ApplicationContext ctx;
 
-    NreplServerWithSpringLog4jStartup(int port) {
-    	LOG.info("starting ReplStartup on Port=" + port);
+    NreplServerSpring(int port) {
+    	super(port);
+    	/*LOG.info("starting ReplStartup on Port=" + port);
     	System.out.println("starting ReplStartup on Port=" + port);
     	try {
         	USE.invoke(SERVER_SOCKET);
@@ -44,7 +45,7 @@ public class NreplServerWithSpringLog4jStartup implements ApplicationContextAwar
     		System.out.println("Repl startup caught an error: " + t);
     	}
     	
-        instance=this;
+        instance=this;*/
     }
 
     public static void main(String[] args) throws Exception {
@@ -52,7 +53,7 @@ public class NreplServerWithSpringLog4jStartup implements ApplicationContextAwar
     }
 
 	public Object getObj(String beanName) {
-		return ctx.getBean(beanName);
+		return get(beanName);
 	}
 	
 	@Override
@@ -67,5 +68,34 @@ public class NreplServerWithSpringLog4jStartup implements ApplicationContextAwar
 
 	}
 
+	@Override
+	public int size() {
+		return ctx.getBeanDefinitionCount() + super.size();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return super.isEmpty() && ctx.getBeanDefinitionCount() == 0;
+	}
+
+	@Override
+	public boolean containsKey(Object key) {
+		if (key instanceof String && ctx.containsBean((String)key)) {
+			return true;
+		} else {
+			return super.containsKey(key);
+		}
+		
+	}
+
+	@Override
+	public Object get(Object key) {
+		if (key instanceof String && ctx.containsBean((String)key)) {
+			return ctx.getBean((String)key);
+		} else {
+			return super.get(key);
+		}
+	}
+	
 
 }

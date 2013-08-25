@@ -22,6 +22,7 @@
   (obj2map (get-bean "department") 5)
   
   ;creation of new obj instance and overwrite class definition on the fly
+  (.getCity (proxy [net.matlux.testobjects.Address] ["53 Victoria Str" "SE1 0LK" "London"] (getStreet [] "53 Victoria Str")))
   (net.matlux.testobjects.Employee. "John" "Smith" (proxy [net.matlux.testobjects.Address] ["53 Victoria Str" "SE1 0LK" "London"] (boo [other] false)))
   (pprint (reflect (.getObj NreplServerWithSpringLog4jStartup/instance "department")))
   ;;(print-table (sort-by :name (:members (reflect net.matlux.testobjects.Employee))))

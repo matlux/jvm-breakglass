@@ -2,8 +2,10 @@ package net.matlux;
 
 
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 
 import clojure.lang.Symbol;
@@ -13,14 +15,14 @@ import clojure.lang.RT;
  * Hello world!
  *
  */
-public class NreplServerStartup 
+public class NreplServer implements Map<String,Object>
 {
 	
 	private Map<String, Object> objMap = new HashMap<String, Object>();
 	final static public int a=1225;
 
 
-	static public NreplServerStartup instance=null;
+	static public NreplServer instance=null;
 	
 	final static public int DEFAULT_PORT=1112;
     final static private Var USE = RT.var("clojure.core", "use");
@@ -29,7 +31,7 @@ public class NreplServerStartup
 
 
 
-    public NreplServerStartup(int port) {
+    public NreplServer(int port) {
     	System.out.println("starting ReplStartup on Port=" + port);
     	try {
         	USE.invoke(SERVER_SOCKET);
@@ -42,13 +44,14 @@ public class NreplServerStartup
         instance=this;
     }
 
-    public static void main(String[] args) throws Exception {
+
+	public static void main(String[] args) throws Exception {
     	int port=DEFAULT_PORT;
     	if(args.length > 0) {
     		port = Integer.parseInt(args[0]);
     	}
 
-    	new NreplServerStartup(port);
+    	new NreplServer(port);
     }
 
     
@@ -59,6 +62,67 @@ public class NreplServerStartup
 	}
 	public void setObjMap(Map<String, Object> objMap) {
 		this.objMap = objMap;
+	}
+
+	@Override
+	public int size() {
+		return objMap.size();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return objMap.isEmpty();
+	}
+
+	@Override
+	public boolean containsKey(Object key) {
+		return objMap.containsKey(key);
+	}
+
+	@Override
+	public boolean containsValue(Object value) {
+		return objMap.containsValue(value);
+	}
+
+	@Override
+	public Object get(Object key) {
+		return objMap.get(key);
+	}
+
+	@Override
+	public Object put(String key, Object value) {
+		return objMap.put(key,value);
+	}
+
+	@Override
+	public Object remove(Object key) {
+		return objMap.remove(key);
+	}
+
+	@Override
+	public void putAll(Map m) {
+		objMap.putAll(m);
+		
+	}
+
+	@Override
+	public void clear() {
+		objMap.clear();
+	}
+
+	@Override
+	public Set keySet() {
+		return objMap.keySet();
+	}
+
+	@Override
+	public Collection values() {
+		return objMap.values();
+	}
+
+	@Override
+	public Set entrySet() {
+		return objMap.entrySet();
 	}
 
 }
