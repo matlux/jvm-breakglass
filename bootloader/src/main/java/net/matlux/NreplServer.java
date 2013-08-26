@@ -41,6 +41,8 @@ public class NreplServer implements Map<String,Object>
     		System.out.println("Repl startup caught an error: " + t);
     	}
     	
+    	objMap.put("a_test_obj", "this is a test String.");
+    	
         instance=this;
     }
 
@@ -61,7 +63,7 @@ public class NreplServer implements Map<String,Object>
 		return objMap.get(key);
 	}
 	public void setObjMap(Map<String, Object> objMap) {
-		this.objMap = objMap;
+		this.objMap.putAll(objMap);
 	}
 
 	@Override
