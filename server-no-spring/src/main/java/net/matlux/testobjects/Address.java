@@ -17,7 +17,11 @@ public class Address {
 	}
 
 	public String getCity() {
-		return city;
+		return street;
+	}
+
+	public String getZipcode() {
+		return zipcode;
 	}
 
 }

@@ -4,33 +4,20 @@
 (use 'clojure.reflect 'clojure.pprint)
 
 (import '(net.matlux NreplServer))
-(import '(net.matlux NreplServerSpring))
 (import '(java.lang.reflect Modifier))
 
 
 
 
-(comment
-  (let [department (. NreplServer/instance getObj "department")
-        fields (map #(do (.setAccessible % true) %) (into [] (. (. department getClass) getDeclaredFields)))]
-    fields)
-
-(def department (. NreplServer/instance getObj "department"))
-
-)
-(defn get-beans []
-    (into [] (.getBeanDefinitionNames (.getApplicationContext NreplServerSpring/instance)))  
-)
 (defn get-objs []
-    (into [] (.keySet NreplServerSpring/instance))
+    (into [] (.keySet NreplServer/instance))
 )
 
 
 
-(defn get-bean [^String bean-name] 
-  (.getObj NreplServerSpring/instance bean-name))
+(defn get-obj [^String bean-name] 
+  (.getObj NreplServer/instance bean-name))
 
-(def get-obj get-bean)
 
 (defn methods-info [obj] 
   (print-table (sort-by :name (filter :exception-types (:members (reflect obj))))))

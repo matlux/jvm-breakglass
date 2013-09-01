@@ -10,6 +10,18 @@
               <constructor-arg index="1" value="SW1" />
               <constructor-arg index="2" value="London" />
        </bean>
+       <bean id="address2"
+              class="net.matlux.testobjects.Address">
+              <constructor-arg index="0" value="1 Madison Square" />
+              <constructor-arg index="1" value="SW2" />
+              <constructor-arg index="2" value="NY" />
+       </bean>
+       <bean id="address3"
+              class="net.matlux.testobjects.Address">
+              <constructor-arg index="0" value="1 Croxley park" />
+              <constructor-arg index="1" value="WT1" />
+              <constructor-arg index="2" value="Watford" />
+       </bean>
        <bean id="employee1"
               class="net.matlux.testobjects.Employee">
               <constructor-arg index="0" value="Bob" />
@@ -18,9 +30,15 @@
        </bean>
        <bean id="employee2"
               class="net.matlux.testobjects.Employee">
+              <constructor-arg index="0" value="Mick" />
+              <constructor-arg index="1" value="Jagger" />
+              <constructor-arg index="2" ref="address2" />
+       </bean>
+       <bean id="employee3"
+              class="net.matlux.testobjects.Employee">
               <constructor-arg index="0" value="John" />
               <constructor-arg index="1" value="Smith" />
-              <constructor-arg index="2" ref="address1" />
+              <constructor-arg index="2" ref="address3" />
        </bean>
 
        <bean id="department"
@@ -31,6 +49,7 @@
                   <list>
                       <ref bean="employee1" />
                       <ref bean="employee2" />                
+                      <ref bean="employee3" />                
                   </list>
               </property>
        </bean>

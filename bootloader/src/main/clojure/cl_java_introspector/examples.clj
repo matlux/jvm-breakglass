@@ -2,14 +2,20 @@
 
 (comment
   ;preparation
-  (import '(net.matlux NreplServerStartup))
-  (import '(net.matlux NreplServerWithSpringLog4jStartup))
+  (use 'cl-java-introspector.spring)
+  (use 'cl-java-introspector.core)
+
+  
+  (import '(net.matlux NreplServerSpring)) 
+  (import '(net.matlux NreplServer))
+  (import 'net.matlux.testobjects.Address)
+  
   (use 'clojure.reflect 'clojure.pprint)
   (use 'me.raynes.fs)
-  (use 'cl-java-introspector.core)
 
   ;do following twice:
   ;list beans
+  (get-objs)
   (get-beans)
   ;find a bean or an object
   (get-bean "department")
@@ -21,8 +27,24 @@
   (to-tree (get-bean "department"))
   (obj2map (get-bean "department") 5)
   
+  ; what is the bug?
+  (->> (get-obj "department") .getEmployees (into []) (map #(->> (.getAddress %) .getCity)) )
+  ; get hold of the two employees
+  (->> (get-obj "department") .getEmployees (into []) (map #(vector (keyword (.getFirstname %)) %)) (into {}))
+  (def employees (->> (get-obj "department") .getEmployees (into []) (map #(vector (keyword (.getFirstname %)) %)) (into {})))
+  (:Mick employees)
+  
   ;creation of new obj instance and overwrite class definition on the fly
-  (.getCity (proxy [net.matlux.testobjects.Address] ["53 Victoria Str" "SE1 0LK" "London"] (getStreet [] "53 Victoria Str")))
+  (.getCity (proxy [net.matlux.testobjects.Address] ["1 Mayfair","SW1","London"] (getStreet [] "53 Victoria Str") (getCity [] "London")))
+  (.getCity (proxy [net.matlux.testobjects.Address] ["1 Madison Square",nil,"NY"] (getStreet [] "1 Madison Square") (getCity [] "NY")))
+  
+  ;; fixing bug 
+  (.setAddress (:Mick employees) (proxy [net.matlux.testobjects.Address] ["1 Madison Square",nil,"NY"] (getStreet [] "1 Madison Square") (getCity [] "NY")))
+  (.setAddress (:Bob employees) (proxy [net.matlux.testobjects.Address] ["1 Mayfair","SW1","London"] (getStreet [] "53 Victoria Str") (getCity [] "London")))
+
+  ;; verify fix
+  (->> (:Mick employees) .getAddress .getCity)
+  
   (net.matlux.testobjects.Employee. "John" "Smith" (proxy [net.matlux.testobjects.Address] ["53 Victoria Str" "SE1 0LK" "London"] (boo [other] false)))
   (pprint (reflect (.getObj NreplServerWithSpringLog4jStartup/instance "department")))
   ;;(print-table (sort-by :name (:members (reflect net.matlux.testobjects.Employee))))
