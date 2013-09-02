@@ -13,6 +13,11 @@
   (use 'clojure.reflect 'clojure.pprint)
   (use 'me.raynes.fs)
 
+  ;;intro
+  (System/getProperties)
+  (list-dir ".")
+  *cwd*
+  
   ;do following twice:
   ;list beans
   (get-objs)
@@ -36,10 +41,10 @@
   
   ;creation of new obj instance and overwrite class definition on the fly
   (.getCity (proxy [net.matlux.testobjects.Address] ["1 Mayfair","SW1","London"] (getStreet [] "53 Victoria Str") (getCity [] "London")))
-  (.getCity (proxy [net.matlux.testobjects.Address] ["1 Madison Square",nil,"NY"] (getStreet [] "1 Madison Square") (getCity [] "NY")))
+  (.getCity (proxy [net.matlux.testobjects.Address] ["1 Madison Square","SW2","NY"] (getStreet [] "1 Madison Square") (getCity [] "NY")))
   
   ;; fixing bug 
-  (.setAddress (:Mick employees) (proxy [net.matlux.testobjects.Address] ["1 Madison Square",nil,"NY"] (getStreet [] "1 Madison Square") (getCity [] "NY")))
+  (.setAddress (:Mick employees) (proxy [net.matlux.testobjects.Address] ["1 Madison Square","SW2","NY"] (getStreet [] "1 Madison Square") (getCity [] "NY")))
   (.setAddress (:Bob employees) (proxy [net.matlux.testobjects.Address] ["1 Mayfair","SW1","London"] (getStreet [] "53 Victoria Str") (getCity [] "London")))
 
   ;; verify fix
@@ -70,6 +75,13 @@
   (directory? ".classpath")
   (directory? ".")
   (filter directory? (list-dir "."))
+  
+  ;;demonstrate how we can search through ns to find a function of a lib like "fs"
+  (->> (ns-map *ns*) (filter #(re-find #"fs" (.toString (val %)))) (map key))
+  
+  ;;demonstrate a shell like pipping with aiming for this:
+  (->> (find-files "." #".*") (map absolute-path) (filter #(and (re-find #"target" %) (file? %))) pprint)
+  
 
   (into [] (.getBeanDefinitionNames (.getApplicationContext NreplServerWithSpringLog4jStartup/instance)))  
   
