@@ -113,7 +113,7 @@ Quick demonstration of a standard Java Server example
 
 ```sh
     git clone https://github.com/matlux/cl-repl-server-bootloader.git
-    cd cl-repl-server-bootloader/server
+    cd cl-repl-server-bootloader/server-no-spring
 ```
 
 * Compile this project
