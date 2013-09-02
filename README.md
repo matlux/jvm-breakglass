@@ -56,21 +56,28 @@ Quick demonstration of this project
 
 * clone this repo and compile the example
 
+```sh
     git clone https://github.com/matlux/cl-repl-server-bootloader.git
     cd cl-repl-server-bootloader/server
-
+```
 
 * Compile this project
 
+```sh
     mvn clean install
+```
 
 * Start the example of a server with the NreplServer
 
+```sh
     ./startSpringServer.sh
+```
 
 * Start the repl client which introspects into the Java server process
 
+```sh
     lein repl :connect localhost:1112
+```
 
 * Copy and past the following commands
 
@@ -104,22 +111,28 @@ Quick demonstration of a standard Java Server example
 
 * clone this repo and compile the example
 
+```sh
     git clone https://github.com/matlux/cl-repl-server-bootloader.git
     cd cl-repl-server-bootloader/server
-
+```
 
 * Compile this project
 
+```sh
     mvn clean install
-
+```
 
 * Start the example of a server with the NreplServer
 
+```sh
     ./startServer.sh
+```
 
 * Start the repl client which introspects into the Java server process
 
+```sh
     lein repl :connect localhost:1112
+```
 
 * Copy and past the following commands
 
@@ -154,12 +167,15 @@ See more [examples](https://github.com/matlux/cl-repl-server-bootloader/blob/mas
 
 ## Via the repl client with lein
 
+```sh
     lein repl :connect [host:port]
+```
 
 for example:
 
+```sh
     lein repl :connect localhost:1112
-
+```
 
 ## programatically
 
