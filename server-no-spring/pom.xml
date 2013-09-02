@@ -46,25 +46,10 @@
       <version>1.4.0</version>
     </dependency>
     <dependency>
-      <groupId>org.clojure</groupId>
-      <artifactId>tools.nrepl</artifactId>
-      <version>0.2.1</version>
-    </dependency>
-    <dependency>
         <groupId>net.matlux</groupId>
         <artifactId>repl-bootloader</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.0.3</version>
     </dependency>
-    <!--  dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>1.6.3</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-web</artifactId>
-      <version>3.0.4.RELEASE</version>
-    </dependency-->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

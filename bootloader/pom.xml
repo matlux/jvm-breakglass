@@ -4,9 +4,28 @@
   <groupId>net.matlux</groupId>
   <artifactId>repl-bootloader</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>0.0.3</version>
   <name>repl-bootloader</name>
-  <url>http://maven.apache.org</url>
+  <url>http://www.matlux.net</url>
+  <description>Setting up an nrepl can be useful to introspect into the JVM for troubleshouting/investigation or testing of regular Java applications. You can connect onto a process and use a Clojure prompt interactivelly or have client application that sends and execute Java code dynamically. It works because the code injected is Clojure and that the Clojure run-time allows to evaluate code at run-time. Furthermore Clojure interops very easily with Java i.e. you can translate pretty much any Java code into Clojure and access all your Java object from the injected Clojure code. This is the perfect tool to access the inside of your JVM process live after it has been deployed. To run any fancy change of code scenario, any data structure or call any method you don't need to redeploy your java code. You can see what your process sees in real time. This is an unvaluable tool to use to develop and maintain a java application.</description>
+  <organization>
+    <name>Matlux Ltd.</name>
+    <url>http://www.matlux.net</url>
+  </organization>
+  <licenses>
+    <license>
+      <name>Copyright (C) 2013 Mathieu Gauthron. Distributed under the Eclipse Public License.</name>
+      <url>http://opensource.org/licenses/eclipse-1.0.php</url>
+      <distribution>repo</distribution>
+      <comments>Same as Clojure.</comments>
+    </license>
+  </licenses>
+  <scm>
+    <connection>https://github.com/matlux/cl-repl-server-bootloader.git</connection>
+    <developerConnection>git@github.com:matlux/cl-repl-server-bootloader.git</developerConnection>
+    <tag>master</tag>
+    <url>https://github.com/matlux/cl-repl-server-bootloader</url>
+  </scm>
   <build>
     <plugins>
       <plugin>
@@ -67,7 +86,7 @@
       <artifactId>spring-web</artifactId>
       <version>3.0.4.RELEASE</version>
       <scope>provided</scope>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

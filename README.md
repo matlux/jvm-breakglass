@@ -11,15 +11,12 @@ Setting up an [nrepl](https://github.com/clojure/tools.nrepl) can be useful to i
 What is this project about?
 ---------------------------
 
+Clojure and REPL can be introduced into a pure Java project to improve troubleshooting without having to force a team to migrate their code away from Java.
+
 nRepl is easy to start in Clojure but it needs a tiny bit of work to inject it into your java process. If your using Spring and Java, this project has done that for you. This project is a Maven module that you can integrate in your java project and inject easily the Repl in your application.
 
-How to install this with Spring
+How to install the REPL in your application with Spring
 -------------------------------
-
-* clone this project
-* compile the project
-
-    mvn clean install
 
 * insert the dependency inside your maven project
 
@@ -27,107 +24,148 @@ How to install this with Spring
 <dependency>
   <groupId>net.matlux</groupId>
   <artifactId>repl-bootloader</artifactId>
+  <version>0.0.3</version>
 </dependency>
 ```
 
 * add the following bean to your Spring config
 
 ```xml
-<bean id="repl" class="net.matlux.NreplServerWithSpringLog4jStartup">
-  <constructor-arg index="0" value="1234" />
+<bean id="repl" class="net.matlux.NreplServerSpring">
+  <constructor-arg index="0" value="1112" />
 </bean>
 ```
 
-1234 is the port number.
+1112 is the port number.
+
+What if I don't use Spring?
+---------------------------
+
+No problems, just instanciate the following class in your application rather than using the xml spring context:
+```java
+    import net.matlux.NreplServer;
+    new NreplServer(port) //start server listening onto port number
+    .put("department",myObject);
+```
+
+Repeat the call to put with as many object as you want to register on the repl. The NreplServer instance is a Map onto which you can add Object instances that you can retreive later on under the repl access.
+
 
 Quick demonstration of this project
 -----------------------------------
+
+* clone this repo and compile the example
+
+    git clone https://github.com/matlux/cl-repl-server-bootloader.git
+    cd cl-repl-server-bootloader/server
+
 
 * Compile this project
 
     mvn clean install
 
-* Start the server with the NreplServerStartup
+* Start the example of a server with the NreplServer
+
+    ./startSpringServer.sh
+
+* Start the repl client which introspects into the Java server process
+
+    lein repl :connect localhost:1112
+
+* Copy and past the following commands
+
+```clojure
+  (use 'cl-java-introspector.spring)
+  (use 'cl-java-introspector.core)
+  (use 'me.raynes.fs)
+
+```
+
+* Type one of the following Commands
+
+```clojure
+  ;list beans
+  (get-beans)
+
+  ;find a bean or an object
+  (get-bean "department")
+
+  ;what methods or fields has the obj?
+  (methods-info  (get-bean "departement"))
+
+```
+
+* what next?
+
+See more [examples](https://github.com/matlux/cl-repl-server-bootloader/blob/master/bootloader/src/main/clojure/cl_java_introspector/examples.clj).
+
+Quick demonstration of a standard Java Server example
+-----------------------------------------------------
+
+* clone this repo and compile the example
+
+    git clone https://github.com/matlux/cl-repl-server-bootloader.git
+    cd cl-repl-server-bootloader/server
+
+
+* Compile this project
+
+    mvn clean install
+
+
+* Start the example of a server with the NreplServer
 
     ./startServer.sh
 
-* Start the programatic client which introspects into the Java Objects
+* Start the repl client which introspects into the Java server process
 
-    ./clj.sh -m cl-java-introspector.core
+    lein repl :connect localhost:1112
 
+* Copy and past the following commands
 
-What if I don't use Spring?
----------------------------
+```clojure
+  (use 'cl-java-introspector.core)
+  (use 'me.raynes.fs)
 
-use
-
-* net.matlux.NreplServerStartup
-
-instead of
-
-* net.matlux.NreplServerWithSpringLog4jStartup
-
-
-Why are there 3 classes available?
-----------------------------------
-
-* net.matlux.ReplStartup
-* net.matlux.NreplServerStartup
-* net.matlux.NreplServerWithSpringLog4jStartup
-
-## Simple telnet Repl server
-
-Use the following class
-
-```java
-    import net.matlux.ReplStartup
-    new ReplStartup(1234);
 ```
 
-Then access the repl via telnet
+* Type one of the following Commands
 
-    telnet localhost 1234
+```clojure
+  ;list objs
+  (get-objs)
 
-You don't need a repl to access this version. But you can't use a client to programatically control it. It is only for testing or for very simple use cases.
+  ;find a bean or an object
+  (get-obj "department")
 
-## nRepl hook for standard Java applications
+  ;what methods or fields has the obj?
+  (methods-info  (get-obj "departement"))
 
-instanciate the following class:
-
-```java
-    import net.matlux.NreplServerStartup;
-    new NreplServerStartup(port); //start server listening onto port number
 ```
 
-## nRepl hook for Spring and log4j applications
+* what next?
 
-For nRepl server and Spring support use the following class:
-
-
-    net.matlux.NreplServerWithSpringLog4jStartup
-
-Add the following bean to your Spring config:
-
-```xml
-    <bean id="repl" class="net.matlux.ReplStartup">
-      <constructor-arg index="0" value="1234" />
-    </bean>
-```
-
-the server will listen onto the port 1234
+See section below with more use cases.
+or
+See more [examples](https://github.com/matlux/cl-repl-server-bootloader/blob/master/bootloader/src/main/clojure/cl_java_introspector/examples.clj).
 
 
-# Accessing nRepl with a client
+# There are two type of client to access the nRepl server
 
 ## Via the repl client with lein
 
     lein repl :connect [host:port]
 
+for example:
+
+    lein repl :connect localhost:1112
+
+
 ## programatically
 
 ```clojure
     (require '[clojure.tools.nrepl :as repl])
-    (with-open [conn (repl/connect :port 1111)]
+    (with-open [conn (repl/connect :port 1112)]
      (-> (repl/client conn 1000)
        (repl/message {:op :eval :code "(+ 1 1)"})
        repl/response-values))
@@ -139,13 +177,50 @@ Also see quick demo above.
 
 # Once you have the nRepl running inside your process. What can you do?
 
+You need to connect onto it with the lein command above and the set of imports (also above). Now you can type any of the following commands.
+
+
 ## retrieve the list of System properties from the java process
 
 ```clojure
-    (filter #(re-matches #"[so].*" (key %)) (into {} (System/getProperties)))
+    (filter #(re-matches #"sun.*" (key %)) (into {} (System/getProperties)))
 ```
 
-This example filters on a regex. It retrieves property keys which start with "so"
+This example filters on a regex. It retrieves property keys which start with "sun"
+
+## list bean or objects
+
+```Clojure
+  (get-beans) ; spring example
+  (get-objs)  ; standard java example
+```
+
+## retrieve a bean or an object by name
+
+```clojure
+  (get-bean "department")  ; spring example
+  (get-obj "department")   ; standard java example
+```
+
+keep the object reference
+```clojure
+  (def myobj (get-bean "department")) ; spring example
+  ;;or
+  (def myobj (get-obj "department")) ; standard java example
+```
+
+## what methods or fields has the obj?
+
+```clojure
+  (methods-info  myobj)
+  (fields-info  myobj)
+```
+
+## show the content of the fields the obj
+
+```clojure
+  (to-tree  myobj)
+```
 
 ## Terminate the process ;)
 
@@ -153,13 +228,22 @@ This example filters on a regex. It retrieves property keys which start with "so
     (System/exit 0)
 ```
 
-## Print hello on the process console
+### Retrieve the Spring application context
 
 ```clojure
-    ((System.out/println "hello"))
+    (import '(net.matlux NreplServerSpring))
+
+
+    (. NreplServerSpring/instance getApplicationContext)
+
+    ;; for example list all the bean names
+    (. (. NreplServerSpring/instance getApplicationContext) getBeanDefinitionNames)
 ```
 
+
 ## Coherence example: Retrieve the number of object in a Cache
+
+Your application needs to have a dependency on Oracle Coherence, The binary and dependency is not provided here, this is just an example.
 
 ```clojure
     (def all-filter (new AlwaysFilter))
@@ -179,7 +263,7 @@ This example filters on a regex. It retrieves property keys which start with "so
 ## Introspect into a Java Object
 
 ```clojure
-    (obj2map myObject)
+    (to-tree myObject)
 ```
 
 For example:
@@ -202,38 +286,9 @@ becomes
 [{objMap {myFriends [{address {city Smallville, zipcode 12300, street 1 Gerards Street}, lastname Simone, firstname Nina} {address {city London, zipcode SW1, street 2 Mayfair}, lastname Richard, firstname Keith}], nullValue nil, department {id 0, name The Art Department, employees [{address {city London, zipcode SW1, street 1 Mayfair}, lastname Dilan, firstname Bob} {address {city NY, zipcode nil, street 1 Time Square}, lastname Jagger, firstname Mick}]}}} nil]
 ```
 
-See src/test//cl_java_introspector/core.clj for details implementation.
+See [cl-java-introspector.core](https://github.com/matlux/cl-repl-server-bootloader/blob/master/bootloader/src/main/clojure/cl_java_introspector/core.clj) for details of the implementation.
 
-## Special for `NreplServerWithSpringLog4jStartup`
 
-### Retrieve a Spring bean called "mybean"
-
-```clojure
-    (import 'net.matlux.NreplServerWithSpringLog4jStartup)
-    (. NreplServerWithSpringLog4jStartup/instance getObj "mybean")
-```
-
-### Retrieve a list of Spring beans
-
-```clojure
-    (. (. NreplServerWithSpringLog4jStartup/instance getApplicationContext) getBeanDefinitionNames)
-```
-
-## Special  for `NreplServerStartup`
-
-### Retrieve a Spring bean called "mybean"
-
-```clojure
-    (import 'net.matlux.NreplServerStartup)
-
-    (. NreplServerStartup/instance getObj "mybean")
-```
-
-### Retrieve a list of Spring beans
-
-```clojure
-    (. (. NreplServerStartup/instance getApplicationContext) getBeanDefinitionNames)
-```
 
 ## License
 

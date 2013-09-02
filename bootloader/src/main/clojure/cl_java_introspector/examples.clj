@@ -20,13 +20,14 @@
   
   ;do following twice:
   ;list beans
-  (get-objs)
-  (get-beans)
-  ;find a bean or an object
-  (get-bean "department")
+  (get-objs)  ; standard java example
+  (get-beans) ; spring example
+  ;retrieve a bean or an object
+  (get-bean "department") ; spring example
+  (get-obj "department")  ; standard java example
   ;what methods or fields has the obj?
-  (methods-info  (get-bean "employee1"))
-  (fields-info  (get-bean "employee1"))
+  (methods-info  (get-bean "department"))
+  (fields-info  (get-bean "department"))
   
   ; can we see inside private members?
   (to-tree (get-bean "department"))
