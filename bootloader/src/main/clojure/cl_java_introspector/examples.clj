@@ -2,14 +2,12 @@
 
 (comment
   ;preparation
-  (use 'cl-java-introspector.spring)
-  (use 'cl-java-introspector.core)
-
-  
   (import '(net.matlux NreplServerSpring)) 
   (import '(net.matlux NreplServer))
+
+  (use 'cl-java-introspector.spring)
+  (use 'cl-java-introspector.core)
   (import 'net.matlux.testobjects.Address)
-  
   (use 'clojure.reflect 'clojure.pprint)
   (use 'me.raynes.fs)
 
