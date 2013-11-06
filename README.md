@@ -26,7 +26,7 @@ How to install the REPL in your application with Spring
 <dependency>
   <groupId>net.matlux</groupId>
   <artifactId>repl-bootloader</artifactId>
-  <version>0.0.3</version>
+  <version>0.0.4</version>
 </dependency>
 ```
 
