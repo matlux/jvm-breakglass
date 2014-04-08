@@ -310,6 +310,6 @@ See [cl-java-introspector.core](https://github.com/matlux/cl-repl-server-bootloa
 
 ## License
 
-Copyright (C) 2013 Mathieu Gauthron
+Copyright (C) 2014 Mathieu Gauthron
 
 Distributed under the Eclipse Public License, the same as Clojure.
