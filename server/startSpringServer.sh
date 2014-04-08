@@ -18,6 +18,5 @@ CLOJURE=$CLOJURE:./src/test/clojure
 CLOJURE=$CLOJURE:$REPO/net/matlux/repl-bootloader/0.0.3/repl-bootloader-0.0.3.jar
 CLOJURE=$CLOJURE:$REPO/net/matlux/server-test/1.0-SNAPSHOT/server-test-1.0-SNAPSHOT.jar
 CLOJURE=$CLOJURE:${PWD}
-server-test-1.0-SNAPSHOT.jar
 
 java -cp "$CLOJURE" net.matlux.testserver.SpringServerExample "$@"
