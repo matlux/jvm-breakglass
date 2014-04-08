@@ -35,6 +35,7 @@
   (->> (get-obj "department") .getEmployees (into []) (map #(->> (.getAddress %) .getCity)) )
   ; get hold of the two employees
   (->> (get-obj "department") .getEmployees (into []) (map #(vector (keyword (.getFirstname %)) %)) (into {}))
+  (->> (get-obj "department") .getEmployees (group-by #(keyword (.getFirstname %))) (into {}))
   (def employees (->> (get-obj "department") .getEmployees (into []) (map #(vector (keyword (.getFirstname %)) %)) (into {})))
   (:Mick employees)
   
