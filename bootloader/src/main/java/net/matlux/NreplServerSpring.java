@@ -1,8 +1,6 @@
 package net.matlux;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -19,7 +17,6 @@ import clojure.lang.RT;
 public class NreplServerSpring extends NreplServer implements ApplicationContextAware
 {
 	
-    private static final Logger LOG = LoggerFactory.getLogger(NreplServerSpring.class);
 
 	//static public NreplServerSpring instance=null;
 	
