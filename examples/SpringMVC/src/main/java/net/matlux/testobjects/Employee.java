@@ -25,7 +25,7 @@ public class Employee {
 		this.address = address;
 	}
 	public String toString() {
-		return firstname + "," +lastname;
+		return firstname + " " +lastname;
 	}
 	
 	
