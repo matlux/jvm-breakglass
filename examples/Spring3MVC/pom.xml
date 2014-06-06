@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.mkyong.common</groupId>
-	<artifactId>SpringMVC</artifactId>
+	<artifactId>SpringMVCjson</artifactId>
 	<packaging>war</packaging>
 	<version>1.0-SNAPSHOT</version>
 	<name>SpringMVC Json Webapp</name>
@@ -77,5 +77,10 @@
 			</plugin>
 		</plugins>
 	</build>
-
+	<repositories>
+		<repository>
+		  <id>clojars.org</id>
+		  <url>http://clojars.org/repo</url>
+		</repository>
+	</repositories>
 </project>
