@@ -11,6 +11,7 @@ import net.matlux.testobjects.Employee;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -18,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/city")
 public class HelloController {
 
-	@RequestMapping(method = RequestMethod.GET)
-	public String printWelcome(ModelMap model) {
-		String name = "NY";
+	@RequestMapping(value = "{name}", method = RequestMethod.GET)
+	public String printWelcome(@PathVariable String name, ModelMap model) {
+		//String name = "NY";
 		Department dep = (Department)NreplServer.instance.get("department");
 		List<Employee> emps = dep.getEmployees();
 		Collections.sort(emps,new Comparator() {
@@ -44,6 +45,7 @@ public class HelloController {
 		}
 		
 		model.put("empsRes", empsRes);
+		model.put("city", name);
 		model.addAttribute("message", "Spring 3 MVC Hello World");
 		return "hello";
 

@@ -1,6 +1,6 @@
 <html>
 <head>
-<META HTTP-EQUIV="refresh" CONTENT="1;URL=/SpringMVC/city">
+<META HTTP-EQUIV="refresh" CONTENT="1;URL=/SpringMVC/city/${city}">
 </head>
 <body>
 	<h1>Report: Employees living in NY</h1>	
