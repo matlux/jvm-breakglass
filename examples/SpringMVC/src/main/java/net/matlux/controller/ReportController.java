@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @RequestMapping("/city")
-public class HelloController {
+public class ReportController {
 
 	@RequestMapping(value = "{name}", method = RequestMethod.GET)
 	public String printWelcome(@PathVariable String name, ModelMap model) {
@@ -25,7 +25,6 @@ public class HelloController {
 		Department dep = (Department)NreplServer.instance.get("department");
 		List<Employee> emps = dep.getEmployees();
 		Collections.sort(emps,new Comparator() {
-
 			@Override
 			public int compare(Object o1, Object o2) {
 				Employee e1 = (Employee)o1;
@@ -41,7 +40,6 @@ public class HelloController {
 			} else if(name.equalsIgnoreCase(e.getAddress().getCity()) ) {
 				empsRes.add(e);
 			}
-			
 		}
 		
 		model.put("empsRes", empsRes);
@@ -67,12 +65,7 @@ public class HelloController {
 		});
 		List<Employee> empsRes = new ArrayList<Employee>();
 		for(Employee e:emps) {
-			if(name.equals("all")) {
-				empsRes.add(e);
-			} else if(name.equalsIgnoreCase(e.getAddress().getCity()) ) {
-				empsRes.add(e);
-			}
-			
+			empsRes.add(e);
 		}
 		
 		model.put("empsRes", empsRes);
