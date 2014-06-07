@@ -1,4 +1,4 @@
-package com.mkyong.common.controller;
+package net.matlux.controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,7 +47,7 @@ public class HelloController {
 		model.put("empsRes", empsRes);
 		model.put("city", name);
 		model.addAttribute("message", "Spring 3 MVC Hello World");
-		return "hello";
+		return "displayEmployeesByCity";
 
 	}
 	@RequestMapping(method = RequestMethod.GET)
