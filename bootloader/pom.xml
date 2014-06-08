@@ -23,7 +23,7 @@
     <connection>https://github.com/matlux/jvm-breakglass.git</connection>
     <developerConnection>git@github.com:matlux/jvm-breakglass.git</developerConnection>
     <tag>R_0.0.5</tag>
-    <url>https://github.com/matlux/jvm-breakglass</url>
+    <url>https://github.com/matlux/jvm-breakglass/tree</url>
   </scm>
   <build>
     <plugins>
