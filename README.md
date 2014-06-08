@@ -304,7 +304,7 @@ becomes
 [{objMap {myFriends [{address {city Smallville, zipcode 12300, street 1 Gerards Street}, lastname Simone, firstname Nina} {address {city London, zipcode SW1, street 2 Mayfair}, lastname Richard, firstname Keith}], nullValue nil, department {id 0, name The Art Department, employees [{address {city London, zipcode SW1, street 1 Mayfair}, lastname Dilan, firstname Bob} {address {city NY, zipcode nil, street 1 Time Square}, lastname Jagger, firstname Mick}]}}} nil]
 ```
 
-See [cl-java-introspector.core](https://github.com/matlux/cl-repl-server-bootloader/blob/master/bootloader/src/main/clojure/cl_java_introspector/core.clj) for details of the implementation.
+See [cl-java-introspector.core](https://github.com/matlux/jvm-breakglass/blob/master/bootloader/src/main/clojure/cl_java_introspector/core.clj) for details of the implementation.
 
 
 
