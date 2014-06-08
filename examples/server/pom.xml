@@ -5,7 +5,7 @@
   <artifactId>server-test</artifactId>
   <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>repl-bootloader</name>
+  <name>spring-server-example</name>
   <url>http://maven.apache.org</url>
   <build>
     <plugins>
@@ -48,14 +48,14 @@
     </dependency>
     <dependency>
         <groupId>net.matlux</groupId>
-        <artifactId>repl-bootloader</artifactId>
-        <version>0.0.4</version>
+        <artifactId>jvm-breakglass</artifactId>
+        <version>0.0.5</version>
     </dependency>
-    <dependency>
+    <!-- dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
         <version>1.6.3</version>
-    </dependency>
+    </dependency -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>

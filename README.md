@@ -25,8 +25,8 @@ How to install the REPL in your application with Spring
 ```xml
 <dependency>
   <groupId>net.matlux</groupId>
-  <artifactId>repl-bootloader</artifactId>
-  <version>0.0.4</version>
+  <artifactId>jvm-breakglass</artifactId>
+  <version>0.0.5</version>
 </dependency>
 ```
 
@@ -59,8 +59,8 @@ Quick demonstration of this project
 * clone this repo and compile the example
 
 ```sh
-    git clone https://github.com/matlux/cl-repl-server-bootloader.git
-    cd cl-repl-server-bootloader/server
+    git clone https://github.com/matlux/jvm-breakglass.git
+    cd jvm-breakglass/examples/server
 ```
 
 * Compile this project
@@ -106,7 +106,7 @@ Quick demonstration of this project
 
 * what next?
 
-See more [examples](https://github.com/matlux/cl-repl-server-bootloader/blob/master/bootloader/src/main/clojure/cl_java_introspector/examples.clj).
+See more [examples](https://github.com/matlux/jvm-breakglass/blob/master/bootloader/src/main/clojure/cl_java_introspector/examples.clj).
 
 Quick demonstration of a standard Java Server example
 -----------------------------------------------------
@@ -114,8 +114,8 @@ Quick demonstration of a standard Java Server example
 * clone this repo and compile the example
 
 ```sh
-    git clone https://github.com/matlux/cl-repl-server-bootloader.git
-    cd cl-repl-server-bootloader/server-no-spring
+    git clone https://github.com/matlux/jvm-breakglass.git
+    cd jvm-breakglass/examples/server-no-spring
 ```
 
 * Compile this project
@@ -162,7 +162,7 @@ Quick demonstration of a standard Java Server example
 
 See section below with more use cases.
 or
-See more [examples](https://github.com/matlux/cl-repl-server-bootloader/blob/master/bootloader/src/main/clojure/cl_java_introspector/examples.clj).
+See more [examples](https://github.com/matlux/jvm-breakglass/blob/master/bootloader/src/main/clojure/cl_java_introspector/examples.clj).
 
 
 # There are two type of client to access the nRepl server
