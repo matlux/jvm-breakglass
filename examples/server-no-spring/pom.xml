@@ -40,15 +40,10 @@
     </resources>
   </build>
   <dependencies>
-    <!-- dependency>
-      <groupId>org.clojure</groupId>
-      <artifactId>clojure</artifactId>
-      <version>1.4.0</version>
-    </dependency -->
     <dependency>
         <groupId>net.matlux</groupId>
         <artifactId>jvm-breakglass</artifactId>
-        <version>0.0.5</version>
+        <version>0.0.6</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

@@ -42,20 +42,10 @@
   </build>
   <dependencies>
     <dependency>
-      <groupId>org.clojure</groupId>
-      <artifactId>clojure</artifactId>
-      <version>1.5.1</version>
-    </dependency>
-    <dependency>
         <groupId>net.matlux</groupId>
         <artifactId>jvm-breakglass</artifactId>
-        <version>0.0.5</version>
+        <version>0.0.6</version>
     </dependency>
-    <!-- dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>1.6.3</version>
-    </dependency -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
