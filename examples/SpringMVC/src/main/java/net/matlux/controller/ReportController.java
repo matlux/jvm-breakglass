@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class ReportController {
 
 	@RequestMapping(value = "{name}", method = RequestMethod.GET)
-	public String printWelcome(@PathVariable String name, ModelMap model) {
+	public String getEmployeesByCity(@PathVariable String name, ModelMap model) {
 		//String name = "NY";
 		Department dep = (Department)NreplServer.instance.get("department");
 		List<Employee> emps = dep.getEmployees();
