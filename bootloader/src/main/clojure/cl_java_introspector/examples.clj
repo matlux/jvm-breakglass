@@ -15,6 +15,9 @@
   (System/getProperties)
   (list-dir ".")
   *cwd*
+    ;;demonstrate how we can search through ns to find a function of a lib like "fs"
+  (->> (ns-map *ns*) (filter #(re-find #"fs" (.toString (val %)))) (map key))
+
 
   ;;demonstrate a shell like pipping with aiming for this:
   (find-files ".." #".*")
@@ -37,14 +40,18 @@
   (fields-info  (get-bean "department"))
 
   ; can we see inside private members?
+  (bean (get-bean "department"))
   (to-tree (get-bean "department"))
   (obj2map (get-bean "department") 5)
 
   ; what is the bug?
   (->> (get-obj "department") .getEmployees)
+  (->> (get-obj "department") .getEmployees (map #(.getAddress %)) )
+  (->> (get-obj "department") .getEmployees (map #(.getAddress %)) first)
+  (->> (get-obj "department") .getEmployees (map #(.getAddress %)) first methods-info)
   (->> (get-obj "department") .getEmployees (map #(->> (.getAddress %) .getCity)) )
   ; get hold of the two employees
-  (->> (get-obj "department") .getEmployees (into []) (map #(vector (keyword (.getFirstname %)) %)) (into {}))
+  (->> (get-obj "department") .getEmployees (map #(vector (keyword (.getFirstname %)) %)) (into {}))
   (->> (get-obj "department") .getEmployees (group-by #(keyword (.getFirstname %))))
   (def employees (->> (get-obj "department") .getEmployees (into []) (map #(vector (keyword (.getFirstname %)) %)) (into {})))
 
@@ -58,12 +65,14 @@
 
 
   ;creation of new obj instance and overwrite class definition on the fly
-  (proxy [Address] ["1 Mayfair","SW1","London"] (getStreet [] "53 Victoria Str") (getCity [] "London"))
-  (.getCity (proxy [Address] ["1 Mayfair","SW1","London"] (getStreet [] "53 Victoria Str") (getCity [] "London")))
-  (.getCity (proxy [Address] ["1 Madison Square","SW2","NY"] (getStreet [] "1 Madison Square") (getCity [] "NY")))
+  (proxy [Address] ["1 Mayfair","SW1","London"])
+  (.getCity (proxy [Address] ["1 Mayfair","SW1","London"]))
+  (def new-addr (proxy [Address] ["1 Mayfair","SW1","London"] (getStreet [] "53 Victoria Str") (getCity [] "London")))
+  (def new-addr (proxy [Address] ["1 Madison Square","SW2","NY"] (getStreet [] "1 Madison Square") (getCity [] "NY")))
+  (.getCity new-addr)
 
   ;; fixing bug
-  (.setAddress (:Mick employees) (proxy [Address] ["1 Madison Square","SW2","NY"] (getStreet [] "1 Madison Square") (getCity [] "NY")))
+  (.setAddress (:Mick employees) new-addr)
   (.setAddress (:Bob employees) (proxy [Address] ["1 Mayfair","SW1","London"] (getStreet [] "53 Victoria Str") (getCity [] "London")))
 
   ;; verify fix
