@@ -29,7 +29,6 @@ How to install the REPL in your application with Spring
   <version>0.0.6</version>
 </dependency>
 ```
-[![Clojars Project](http://clojars.org/net.matlux/jvm-breakglass/latest-version.svg)](http://clojars.org/net.matlux/jvm-breakglass)
 
 * add the following bean to your Spring config
 
