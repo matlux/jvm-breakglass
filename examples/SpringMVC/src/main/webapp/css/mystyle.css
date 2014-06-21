@@ -1,7 +1,7 @@
 .title {
-    float: left;
+    float: center;
     width: 79%;
-    margin-right: 1%;
+    margin-left: 10%;
 }
 .left {
     float: left;
@@ -16,7 +16,7 @@
     width: 20%;
 }
 input.reportbutton {
-    width: 10em; 
-    height: 3em;
-    font-size: 3em;
+    width: 8em; 
+    height: 5em;
+    font-size: 5em;
 }
