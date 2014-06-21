@@ -32,7 +32,7 @@
   (get-beans) ; spring example
   ;retrieve a bean or an object
   (get-bean "reportController") ; spring example
-  (get-bean "department") ; spring example
+  (get-bean "department") ; spring example  ( 8 mins)
   (get-obj "department")  ; standard java example
   ;what methods or fields has the obj?
   (methods-info  (get-bean "reportController"))
