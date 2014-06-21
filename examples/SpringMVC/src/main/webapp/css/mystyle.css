@@ -1,0 +1,22 @@
+.title {
+    float: left;
+    width: 79%;
+    margin-right: 1%;
+}
+.left {
+    float: left;
+    width: 69%;
+    margin-left: 10%;
+}
+.left img {
+    float: right;
+}
+.right {
+    float: right;
+    width: 20%;
+}
+input.reportbutton {
+    width: 10em; 
+    height: 3em;
+    font-size: 3em;
+}
