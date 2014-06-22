@@ -1,15 +1,16 @@
 (ns cl-java-introspector.examples)
 
 (comment
-  ;preparation
-  (import '(net.matlux NreplServerSpring))
-  (import '(net.matlux NreplServer))
+  ;;preparation
+  (do
+   (import '(net.matlux NreplServerSpring))
+   (import '(net.matlux NreplServer))
 
-  (use 'cl-java-introspector.spring)
-  (use 'cl-java-introspector.core)
-  (import 'net.matlux.testobjects.Address)
-  (use 'clojure.reflect 'clojure.pprint 'clojure.java.javadoc)
-  (use 'me.raynes.fs)
+   (use 'cl-java-introspector.spring)
+   (use 'cl-java-introspector.core)
+   (import 'net.matlux.testobjects.Address)
+   (use 'clojure.reflect 'clojure.pprint 'clojure.java.javadoc)
+   (use 'me.raynes.fs))
 
   ;;intro
   (System/getProperties)
@@ -21,10 +22,7 @@
 
   ;;demonstrate a shell like pipping with aiming for this:
   (find-files ".." #".*")
-  (->> (find-files ".." #".*") (map absolute-path))
   (->> (find-files ".." #".*") (map absolute-path) (filter #(and (re-find #"conf" %) (directory? %))))
-  (->> (find-files ".." #".*") (map absolute-path) (filter #(and (re-find #"conf" %) (directory? %) pprint)))
-
 
   ;do following twice:
   ;list beans
@@ -46,10 +44,6 @@
 
   ; what is the bug?
   (->> (get-obj "department") .getEmployees)
-  (->> (get-obj "department") .getEmployees (map #(.getAddress %)) )
-  (->> (get-obj "department") .getEmployees (map #(.getAddress %)) first)
-  (->> (get-obj "department") .getEmployees (map #(.getAddress %)) first methods-info)
-  (->> (get-obj "department") .getEmployees (map #(->> (.getAddress %) .getCity)) )
   ; get hold of the two employees
   (->> (get-obj "department") .getEmployees (map #(vector (keyword (.getFirstname %)) %)) (into {}))
   (->> (get-obj "department") .getEmployees (group-by #(keyword (.getFirstname %))))
@@ -105,6 +99,10 @@
 ;(->> NreplServerStartup/instance get-member-fields first second to-tree :department get-obj-methods first bean)
 ;(->> (to-tree NreplServerStartup/instance) :objMap :department :employees second :lastname)
 
+  (->> (get-obj "department") .getEmployees (map #(.getAddress %)) )
+  (->> (get-obj "department") .getEmployees (map #(.getAddress %)) first)
+  (->> (get-obj "department") .getEmployees (map #(.getAddress %)) first methods-info)
+  (->> (get-obj "department") .getEmployees (map #(->> (.getAddress %) .getCity)) )
 
 
 )
