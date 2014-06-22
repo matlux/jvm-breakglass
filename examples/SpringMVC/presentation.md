@@ -9,7 +9,10 @@
 * open eclipse on Address class
 * start emacs
 
-   emacs ../../bootloader/src/main/clojure/cl_java_introspector/examples.clj
+   cd ~/datashare/mgauthron/clojure/jvm-breakglass
+   emacs bootloader/src/main/clojure/cl_java_introspector/examples.clj
 
 * start cider on port 1112 
 * increase font C-x C-+
+* preload namespaces
+* test (System/getProperties)
