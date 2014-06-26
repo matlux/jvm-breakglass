@@ -32,15 +32,18 @@
   (get-bean "reportController") ; spring example
   (get-bean "department") ; spring example  ( 8 mins)
   (get-obj "department")  ; standard java example
-  ;what methods or fields has the obj?
-  (methods-info  (get-bean "reportController"))
-  (methods-info  (get-bean "department"))
-  (fields-info  (get-bean "department"))
 
   ; can we see inside private members?
   (bean (get-bean "department"))
   (to-tree (get-bean "department"))
   (obj2map (get-bean "department") 5)
+
+
+  ;;what methods or fields has the obj?
+  (methods-info  (get-bean "reportController"))
+  (methods-info  (get-bean "department"))
+  (fields-info  (get-bean "department"))
+
 
   ; what is the bug?
   (->> (get-obj "department") .getEmployees)
