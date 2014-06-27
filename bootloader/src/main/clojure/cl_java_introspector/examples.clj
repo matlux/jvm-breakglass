@@ -40,7 +40,6 @@
 
 
   ;;what methods or fields has the obj?
-  (methods-info  (get-bean "reportController"))
   (methods-info  (get-bean "department"))
   (fields-info  (get-bean "department"))
 
@@ -70,6 +69,11 @@
 
   ;; fixing bug
   (.setAddress (:Mick employees) new-addr)
+
+
+
+
+
   (.setAddress (:Bob employees) (proxy [Address] ["1 Mayfair","SW1","London"] (getStreet [] "53 Victoria Str") (getCity [] "London")))
 
   ;; verify fix
