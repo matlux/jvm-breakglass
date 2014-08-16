@@ -2,6 +2,7 @@ package net.matlux;
 
 
 
+import java.lang.management.ManagementFactory;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,11 +12,16 @@ import java.util.Set;
 import clojure.lang.Symbol;
 import clojure.lang.Var;
 import clojure.lang.RT;
+
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+import javax.management.StandardMBean;
+
 /**
  * Hello world!
  *
  */
-public class NreplServer implements Map<String,Object>
+public class NreplServer implements Map<String,Object>, NreplMBean
 {
 	
 	private Map<String, Object> objMap = new HashMap<String, Object>();
@@ -27,25 +33,33 @@ public class NreplServer implements Map<String,Object>
 	final static public int DEFAULT_PORT=1112;
     final static private Var USE = RT.var("clojure.core", "use");
     final static private Symbol SERVER_SOCKET = Symbol.intern("net.matlux.server.nrepl");
-    final static private Var CREATE_REPL_SERVER = RT.var("net.matlux.server.nrepl","start-server-now");
+    final static private Var START_REPL_SERVER = RT.var("net.matlux.server.nrepl", "start-server-now");
+    final static private Var STOP_REPL_SERVER = RT.var("net.matlux.server.nrepl","stop-server-now");
 
+	private final int port;
+	private boolean isStarted;
 
+	public NreplServer(int port, boolean startOnCreation) {
+		this.port = port;
+		System.out.println("starting ReplStartup on Port=" + port);
+		try {
+			USE.invoke(SERVER_SOCKET);
+		} catch (Throwable t) {
+			System.out.println("Repl startup caught an error: " + t);
+		}
+
+		if (startOnCreation) {
+			start();
+		}
+
+		objMap.put("a_test_obj", "this is a test String.");
+		registerMBean();
+		instance=this;
+	}
 
     public NreplServer(int port) {
-    	System.out.println("starting ReplStartup on Port=" + port);
-    	try {
-        	USE.invoke(SERVER_SOCKET);
-    		CREATE_REPL_SERVER.invoke(port);
-    		System.out.println("Repl started successfully");
-    	} catch (Throwable t) {
-    		System.out.println("Repl startup caught an error: " + t);
-    	}
-    	
-    	objMap.put("a_test_obj", "this is a test String.");
-    	
-        instance=this;
-    }
-
+		this(port, true);
+	}
 
 	public static void main(String[] args) throws Exception {
     	int port=DEFAULT_PORT;
@@ -56,7 +70,48 @@ public class NreplServer implements Map<String,Object>
     	new NreplServer(port);
     }
 
-    
+	@Override
+    public void start() {
+		try {
+			START_REPL_SERVER.invoke(port);
+			System.out.println("Repl started successfully");
+		} catch (Throwable t) {
+			System.out.println("Repl startup caught an error: " + t);
+		}
+		isStarted = true;
+	}
+
+	@Override
+	public void stop() {
+		try {
+			STOP_REPL_SERVER.invoke();
+			System.out.println("Repl stopped successfully");
+		} catch (Throwable t) {
+			System.out.println("Repl stop caught an error: " + t);
+		}
+		isStarted = false;
+	}
+
+	@Override
+	public int getPort() {
+		return port;
+	}
+
+	@Override
+	public boolean isStarted() {
+		return isStarted;
+	}
+
+	private void registerMBean() {
+		try {
+			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+			ObjectName name = new ObjectName("net.matlux:name=Nrepl");
+			StandardMBean mbean = new StandardMBean(this, NreplMBean.class, false);
+			mbs.registerMBean(mbean, name);
+		} catch (Exception e) {
+			System.out.println("MBean Registration not successful: " + e);
+		}
+	}
 
 
 	public Object getObj(String key) {
