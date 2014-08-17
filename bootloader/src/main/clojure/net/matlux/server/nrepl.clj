@@ -2,10 +2,18 @@
 
 (use '[clojure.tools.nrepl.server :only (start-server stop-server)])
 
-(def server (atom {}))
+(def server (atom nil))
+
+(defn safe-stop-server [server]
+	(when (not (nil? server))
+		(stop-server server)))
 
 (defn start-server-now [port]
-  (reset! server (start-server :port port)))
+  (swap! server (fn [old-server]
+									(safe-stop-server old-server)
+									(start-server :port port))))
 
 (defn stop-server-now []
-	(stop-server @server))
+	(swap! server (fn [old-server]
+									(safe-stop-server old-server)
+									nil)))

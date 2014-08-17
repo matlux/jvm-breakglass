@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 
+import clojure.lang.Atom;
 import clojure.lang.Symbol;
 import clojure.lang.Var;
 import clojure.lang.RT;
@@ -35,13 +36,13 @@ public class NreplServer implements Map<String,Object>, NreplMBean
     final static private Symbol SERVER_SOCKET = Symbol.intern("net.matlux.server.nrepl");
     final static private Var START_REPL_SERVER = RT.var("net.matlux.server.nrepl", "start-server-now");
     final static private Var STOP_REPL_SERVER = RT.var("net.matlux.server.nrepl","stop-server-now");
+	final static private Var SERVER = RT.var("net.matlux.server.nrepl", "server");
 
-	private final int port;
-	private boolean isStarted;
+	private int port;
 
 	public NreplServer(int port, boolean startOnCreation) {
 		this.port = port;
-		System.out.println("starting ReplStartup on Port=" + port);
+		System.out.println("Configuring ReplStartup on Port=" + port);
 		try {
 			USE.invoke(SERVER_SOCKET);
 		} catch (Throwable t) {
@@ -74,11 +75,10 @@ public class NreplServer implements Map<String,Object>, NreplMBean
     public void start() {
 		try {
 			START_REPL_SERVER.invoke(port);
-			System.out.println("Repl started successfully");
+			System.out.println("Repl started successfully on Port=" + port);
 		} catch (Throwable t) {
 			System.out.println("Repl startup caught an error: " + t);
 		}
-		isStarted = true;
 	}
 
 	@Override
@@ -89,7 +89,6 @@ public class NreplServer implements Map<String,Object>, NreplMBean
 		} catch (Throwable t) {
 			System.out.println("Repl stop caught an error: " + t);
 		}
-		isStarted = false;
 	}
 
 	@Override
@@ -98,8 +97,13 @@ public class NreplServer implements Map<String,Object>, NreplMBean
 	}
 
 	@Override
+	public void setPort(int port) {
+		this.port = port;
+	}
+
+	@Override
 	public boolean isStarted() {
-		return isStarted;
+		return ((Atom) SERVER.deref()).deref() != null;
 	}
 
 	private void registerMBean() {
@@ -148,7 +152,7 @@ public class NreplServer implements Map<String,Object>, NreplMBean
 
 	@Override
 	public Object put(String key, Object value) {
-		return objMap.put(key,value);
+		return objMap.put(key, value);
 	}
 
 	@Override
