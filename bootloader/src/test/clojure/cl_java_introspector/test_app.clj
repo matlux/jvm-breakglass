@@ -27,20 +27,20 @@
 
 (deftest test-app-with-NreplServer
   (testing "test"
-    (is (= (let [server (NreplServer. 1112)
+    (is (= (let [server (NreplServer. 1113)
                  original-emp (Employee. Fixtures/EMPLOYEE_FNAME1 Fixtures/EMPLOYEE_LNAME1 (Address. Fixtures/STREET1 Fixtures/ZIPCODE1 Fixtures/CITY1))
                  _ (.put server "employee1" original-emp)
-                 res (remote-execute "localhost" 1112 test1)]
+                 res (remote-execute "localhost" 1113 test1)]
              (.stop server)
              (drop 7 res))
            (list ["employee1" "a_test_obj"] '(var user/employee1) Fixtures/EMPLOYEE_FNAME1 Fixtures/STREET1  nil Fixtures/CITY1)))))
 
 (deftest test-app-with-NreplServerSpring
   (testing "test"
-    (is (= (let [server (NreplServer. 1112)
+    (is (= (let [server (NreplServer. 1114)
                  original-emp (Employee. Fixtures/EMPLOYEE_FNAME1 Fixtures/EMPLOYEE_LNAME1 (Address. Fixtures/STREET1 Fixtures/ZIPCODE1 Fixtures/CITY1))
                  _ (.put server "employee1" original-emp)
-                 res (remote-execute "localhost" 1112 test1)]
+                 res (remote-execute "localhost" 1114 test1)]
              (.stop server)
              (drop 7 res))
            (list ["employee1" "a_test_obj"] '(var user/employee1) Fixtures/EMPLOYEE_FNAME1 Fixtures/STREET1  nil Fixtures/CITY1)))))

@@ -51,15 +51,11 @@ public class AppTest
     	
     	server.stop();
     }
-    /*public void testStartStopServerThreadSafety1()
-    {
-    	NreplServer server = new NreplServer(1112); //start server listening onto port number
+    public void testStartStopServerThreadSafety1()
+    {	//todo: start multiple servers from different threads
+    	NreplServer server = new NreplServer(1113); //start server listening onto port number
+    	assertEquals(1113, server.getPort());
     	server.stop();
-    	server.start();
-    	server.stop();
-    	server.start();
-    	server.stop();
-    	server.start();
-    	server.stop();
-    }*/
+    	
+    }
 }
