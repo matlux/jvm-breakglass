@@ -28,6 +28,10 @@ public class NreplServerSpring extends NreplServer implements ApplicationContext
     @Autowired
 	private ApplicationContext ctx;
 
+	public NreplServerSpring(int port, boolean startOnCreation) {
+		super(port, startOnCreation);
+	}
+
     public NreplServerSpring(int port) {
     	super(port);
     	/*LOG.info("starting ReplStartup on Port=" + port);
