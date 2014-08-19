@@ -15,7 +15,7 @@ CLOJURE=$CLOJURE:$REPO/org/slf4j/slf4j-api/1.6.3/slf4j-api-1.6.3.jar
 CLOJURE=$CLOJURE:$REPO/me/raynes/fs/1.4.5/fs-1.4.5.jar
 CLOJURE=$CLOJURE:./src/test/clojure
 #CLOJURE=$CLOJURE:$REPO/net/matlux/repl-bootloader/1.0-SNAPSHOT/repl-bootloader-1.0-SNAPSHOT.jar
-CLOJURE=$CLOJURE:$REPO/net/matlux/jvm-breakglass/0.0.5/jvm-breakglass-0.0.5.jar
+CLOJURE=$CLOJURE:$REPO/net/matlux/jvm-breakglass/0.0.7-SNAPSHOT/jvm-breakglass-0.0.7-SNAPSHOT.jar
 CLOJURE=$CLOJURE:./target/server-test-1.0-SNAPSHOT.jar
 CLOJURE=$CLOJURE:${PWD}
 
