@@ -54,7 +54,6 @@ public class NreplServer implements Map<String,Object>, NreplMBean
 		}
 
 		objMap.put("a_test_obj", "this is a test String.");
-		registerMBean();
 		instance=this;
 	}
 
@@ -103,20 +102,16 @@ public class NreplServer implements Map<String,Object>, NreplMBean
 
 	@Override
 	public boolean isStarted() {
-		return ((Atom) SERVER.deref()).deref() != null;
+		return SERVER.deref() != null;
 	}
 
-	private void registerMBean() {
-		try {
-			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-			ObjectName name = new ObjectName("net.matlux:name=Nrepl");
-			StandardMBean mbean = new StandardMBean(this, NreplMBean.class, false);
-			mbs.registerMBean(mbean, name);
-		} catch (Exception e) {
-			System.out.println("MBean Registration not successful: " + e);
-		}
+	public void registerMBean() {
+		MBeanRegistration.registerNreplServerAsMBean(this);
 	}
 
+	public void unregisterMBean() {
+		MBeanRegistration.unregisterNreplServerAsMBean();
+	}
 
 	public Object getObj(String key) {
 		return objMap.get(key);
