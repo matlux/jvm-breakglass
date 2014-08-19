@@ -103,7 +103,7 @@ public class NreplServer implements Map<String,Object>, NreplMBean
 
 	@Override
 	public boolean isStarted() {
-		return ((Atom) SERVER.deref()).deref() != null;
+		return SERVER.deref() != null;
 	}
 
 	private void registerMBean() {
