@@ -52,6 +52,20 @@ No problems, just instanciate the following class in your application rather tha
 
 Repeat the call to put with as many object as you want to register on the repl. The NreplServer instance is a Map onto which you can add Object instances that you can retreive later on under the repl access.
 
+MBean registration
+------------------
+
+It is also possible to register the NreplServer as MBean for access via a JMX console. The registred MBean is found under the name `net.matlux:name=Nrepl`. The MBean has the following properties and operations.
+
+|Type|Name|Meaning|
+|----|----|-------|
+|Attribute|Port|Indicates the port used for the nrepl server (read/write).|
+|Attribute|Started|Indicates wether the NreplServer is started or not (read only).|
+|Operation|Start|Starts the NreplServer.|
+|Operation|Stop|Stops the NreplServer.|
+
+The registration/unregistration of the NReplServer to the MBeanServer must be done manually via the methods `NReplServer#registerMBean` and `NReplServer#unregisterMBean`. If you are using the NReplServer with Spring, these operations are typically preformed post construction and pre destruction.
+
 
 Quick demonstration of this project
 -----------------------------------
