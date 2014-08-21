@@ -28,25 +28,12 @@ public class NreplServerSpring extends NreplServer implements ApplicationContext
     @Autowired
 	private ApplicationContext ctx;
 
-	public NreplServerSpring(int port, boolean startOnCreation) {
-		super(port, startOnCreation);
+	public NreplServerSpring(int port, boolean startOnCreation, boolean registerMBeanOnCreation) {
+		super(port, startOnCreation, registerMBeanOnCreation);
 	}
 
     public NreplServerSpring(int port) {
     	super(port);
-    	/*LOG.info("starting ReplStartup on Port=" + port);
-    	System.out.println("starting ReplStartup on Port=" + port);
-    	try {
-        	USE.invoke(SERVER_SOCKET);
-    		CREATE_REPL_SERVER.invoke(port);
-    		LOG.info("Repl started successfully");
-    		System.out.println("Repl started successfully");
-    	} catch (Throwable t) {
-    		LOG.error("Repl startup caught an error: " + t);
-    		System.out.println("Repl startup caught an error: " + t);
-    	}
-    	
-        instance=this;*/
     }
 
     public static void main(String[] args) throws Exception {

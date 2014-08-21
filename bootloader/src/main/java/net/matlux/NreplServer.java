@@ -33,24 +33,29 @@ public class NreplServer implements Map<String,Object>, NreplMBean
 	
 	final static public int DEFAULT_PORT=1112;
     final static private Var USE = RT.var("clojure.core", "use");
-    final static private Symbol SERVER_SOCKET = Symbol.intern("net.matlux.server.nrepl");
+    final static private Symbol REPL_SERVER_NS = Symbol.intern("net.matlux.server.nrepl");
     final static private Var START_REPL_SERVER = RT.var("net.matlux.server.nrepl", "start-server-now");
     final static private Var STOP_REPL_SERVER = RT.var("net.matlux.server.nrepl","stop-server-now");
 	final static private Var SERVER = RT.var("net.matlux.server.nrepl", "server");
 
 	private int port;
 
-	public NreplServer(int port, boolean startOnCreation) {
+	public NreplServer(int port, boolean startOnCreation, boolean registerMBeanOnCreation) {
 		this.port = port;
 		System.out.println("Configuring ReplStartup on Port=" + port);
 		try {
-			USE.invoke(SERVER_SOCKET);
+			USE.invoke(REPL_SERVER_NS);
 		} catch (Throwable t) {
 			System.out.println("Repl startup caught an error: " + t);
+			t.printStackTrace();
 		}
 
 		if (startOnCreation) {
 			start();
+		}
+
+		if (registerMBeanOnCreation) {
+			registerMBean();
 		}
 
 		objMap.put("a_test_obj", "this is a test String.");
@@ -58,7 +63,7 @@ public class NreplServer implements Map<String,Object>, NreplMBean
 	}
 
     public NreplServer(int port) {
-		this(port, true);
+		this(port, true,true);
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -77,6 +82,7 @@ public class NreplServer implements Map<String,Object>, NreplMBean
 			System.out.println("Repl started successfully on Port=" + port);
 		} catch (Throwable t) {
 			System.out.println("Repl startup caught an error: " + t);
+			t.printStackTrace();
 		}
 	}
 

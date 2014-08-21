@@ -25,22 +25,28 @@
    (.setAddress employee1 (proxy [Address] [\"1 Madison Square\",\"SW2\",\"NY\"] (getStreet [] \"1 Madison Square\") (getCity [] \"" Fixtures/CITY1 "\")))
    (->> employee1 .getAddress .getCity)"))
 
+(def fixture-test1-result (list 'net.matlux.NreplServerSpring 'net.matlux.NreplServer nil nil 'net.matlux.testobjects.Address nil nil ["employee1" "a_test_obj"] '(var user/employee1) Fixtures/EMPLOYEE_FNAME1 Fixtures/STREET1  nil Fixtures/CITY1))
+(def fixture-test1-result-dropped (list ["employee1" "a_test_obj"] '(var user/employee1) Fixtures/EMPLOYEE_FNAME1 Fixtures/STREET1  nil Fixtures/CITY1))
+
+(defn run-remote-test-code1 [port code]
+  (let [server (NreplServer. port)
+                 original-emp (Employee. Fixtures/EMPLOYEE_FNAME1 Fixtures/EMPLOYEE_LNAME1 (Address. Fixtures/STREET1 Fixtures/ZIPCODE1 Fixtures/CITY1))
+                 _ (.put server "employee1" original-emp)
+                 res (remote-execute "localhost" 1114 code)]
+             (.stop server)
+             (drop 7 res)))
+
 (deftest test-app-with-NreplServer
+  (testing "test"
+    (is (= (run-remote-test-code1 1114 test1)
+           fixture-test1-result-dropped))))
+
+(deftest test-app-with-NreplServerSpring
   (testing "test"
     (is (= (let [server (NreplServer. 1113)
                  original-emp (Employee. Fixtures/EMPLOYEE_FNAME1 Fixtures/EMPLOYEE_LNAME1 (Address. Fixtures/STREET1 Fixtures/ZIPCODE1 Fixtures/CITY1))
                  _ (.put server "employee1" original-emp)
                  res (remote-execute "localhost" 1113 test1)]
-             (.stop server)
-             (drop 7 res))
-           (list ["employee1" "a_test_obj"] '(var user/employee1) Fixtures/EMPLOYEE_FNAME1 Fixtures/STREET1  nil Fixtures/CITY1)))))
-
-(deftest test-app-with-NreplServerSpring
-  (testing "test"
-    (is (= (let [server (NreplServer. 1114)
-                 original-emp (Employee. Fixtures/EMPLOYEE_FNAME1 Fixtures/EMPLOYEE_LNAME1 (Address. Fixtures/STREET1 Fixtures/ZIPCODE1 Fixtures/CITY1))
-                 _ (.put server "employee1" original-emp)
-                 res (remote-execute "localhost" 1114 test1)]
              (.stop server)
              (drop 7 res))
            (list ["employee1" "a_test_obj"] '(var user/employee1) Fixtures/EMPLOYEE_FNAME1 Fixtures/STREET1  nil Fixtures/CITY1)))))

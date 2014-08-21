@@ -6,6 +6,11 @@ import junit.framework.TestSuite;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
+
+import clojure.lang.RT;
+import clojure.lang.Symbol;
+import clojure.lang.Var;
+
 import java.lang.management.ManagementFactory;
 
 public class MBeanTest extends TestCase
@@ -29,7 +34,7 @@ public class MBeanTest extends TestCase
 	}
 
 	public void testRegisterUnregister() throws Exception {
-		NreplServer nreplServer = new NreplServer(1111, false);
+		NreplServer nreplServer = new NreplServer(1111, false,false);
 		nreplServer.registerMBean();
 		ObjectName objectName = MBeanRegistration.getObjectName();
 		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
