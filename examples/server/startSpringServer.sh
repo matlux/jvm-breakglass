@@ -1,7 +1,7 @@
 REPO=~/.m2/repository
 
 
-CLOJURE=$CLASSPATH:$REPO/org/clojure/clojure/1.4.0/clojure-1.4.0.jar
+CLOJURE=$CLASSPATH:$REPO/org/clojure/clojure/1.6.0/clojure-1.6.0.jar
 CLOJURE=$CLOJURE:$REPO/org/clojure/tools.nrepl/0.2.1/tools.nrepl-0.2.1.jar
 CLOJURE=$CLOJURE:$REPO/org/springframework/spring-web/3.0.4.RELEASE/spring-web-3.0.4.RELEASE.jar
 CLOJURE=$CLOJURE:$REPO/org/springframework/spring-context/3.0.4.RELEASE/spring-context-3.0.4.RELEASE.jar
