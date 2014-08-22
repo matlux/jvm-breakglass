@@ -10,15 +10,19 @@ import javax.management.ObjectInstance;
 import javax.management.ObjectName;
 import javax.management.StandardMBean;
 import java.lang.management.ManagementFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class MBeanRegistration {
+
+	private static final Logger LOGGER = Logger.getLogger(MBeanRegistration.class.getSimpleName());
 
 	public static void registerNreplServerAsMBean(NreplMBean nreplServer) {
 		try {
 			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 			registerMBean(mbs, getObjectName(), nreplServer);
 		} catch (Exception e) {
-			System.out.println("MBean Registration not successful: " + e);
+			LOGGER.log(Level.SEVERE, "MBean Registration not successful", e);
 		}
 	}
 
@@ -27,7 +31,7 @@ public final class MBeanRegistration {
 			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 			mbs.unregisterMBean(getObjectName());
 		} catch (Exception e) {
-			System.out.println("MBean Unregistration not successful: " + e);
+			LOGGER.log(Level.SEVERE, "MBean Unregistration not successful", e);
 		}
 	}
 
