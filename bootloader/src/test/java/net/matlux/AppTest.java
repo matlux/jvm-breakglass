@@ -138,6 +138,6 @@ public class AppTest
     	NreplServer server = new NreplServer(1113); //start server listening onto port number
     	assertEquals(1113, server.getPort());
     	server.stop();
-    	
+    	server.unregisterMBean();
     }
 }

@@ -34,6 +34,7 @@
                  _ (.put server "employee1" original-emp)
                  res (remote-execute "localhost" 1114 code)]
              (.stop server)
+             (.unregisterMBean server)
              (drop 7 res)))
 
 (deftest test-app-with-NreplServer
@@ -48,5 +49,6 @@
                  _ (.put server "employee1" original-emp)
                  res (remote-execute "localhost" 1113 test1)]
              (.stop server)
+             (.unregisterMBean server)
              (drop 7 res))
            (list ["employee1" "a_test_obj"] '(var user/employee1) Fixtures/EMPLOYEE_FNAME1 Fixtures/STREET1  nil Fixtures/CITY1)))))
