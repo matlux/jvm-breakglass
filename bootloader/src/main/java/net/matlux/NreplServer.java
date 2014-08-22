@@ -7,6 +7,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 import clojure.lang.Atom;
@@ -24,6 +26,7 @@ import javax.management.StandardMBean;
  */
 public class NreplServer implements Map<String,Object>, NreplMBean
 {
+	private static final Logger LOGGER = Logger.getLogger(NreplServer.class.getSimpleName());
 	
 	private Map<String, Object> objMap = new HashMap<String, Object>();
 	final static public int a=1225;
@@ -42,12 +45,11 @@ public class NreplServer implements Map<String,Object>, NreplMBean
 
 	public NreplServer(int port, boolean startOnCreation, boolean registerMBeanOnCreation) {
 		this.port = port;
-		System.out.println("Configuring ReplStartup on Port=" + port);
+		LOGGER.info("Creating ReplStartup for Port=" + port);
 		try {
 			USE.invoke(REPL_SERVER_NS);
 		} catch (Throwable t) {
-			System.out.println("Repl startup caught an error: " + t);
-			t.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Repl initialization caught an error", t);
 		}
 
 		if (startOnCreation) {
@@ -79,10 +81,9 @@ public class NreplServer implements Map<String,Object>, NreplMBean
     public void start() {
 		try {
 			START_REPL_SERVER.invoke(port);
-			System.out.println("Repl started successfully on Port=" + port);
+			LOGGER.info("Repl started successfully on Port = " + port);
 		} catch (Throwable t) {
-			System.out.println("Repl startup caught an error: " + t);
-			t.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Repl startup caught an error", t);
 		}
 	}
 
@@ -90,9 +91,9 @@ public class NreplServer implements Map<String,Object>, NreplMBean
 	public void stop() {
 		try {
 			STOP_REPL_SERVER.invoke();
-			System.out.println("Repl stopped successfully");
+			LOGGER.info("Repl stopped successfully");
 		} catch (Throwable t) {
-			System.out.println("Repl stop caught an error: " + t);
+			LOGGER.log(Level.SEVERE, "Repl stop caught an error", t);
 		}
 	}
 
