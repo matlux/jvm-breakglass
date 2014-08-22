@@ -6,10 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import clojure.lang.Symbol;
-import clojure.lang.Var;
-import clojure.lang.RT;
 /**
  * Hello world!
  *
@@ -21,10 +17,6 @@ public class NreplServerSpring extends NreplServer implements ApplicationContext
 	//static public NreplServerSpring instance=null;
 	
 	final static public int DEFAULT_PORT=1111;
-    final static private Var USE = RT.var("clojure.core", "use");
-    final static private Symbol SERVER_SOCKET = Symbol.intern("net.matlux.server.nrepl");
-    final static private Var CREATE_REPL_SERVER = RT.var("net.matlux.server.nrepl","start-server-now");
-
     @Autowired
 	private ApplicationContext ctx;
 

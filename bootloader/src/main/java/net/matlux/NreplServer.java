@@ -2,7 +2,6 @@ package net.matlux;
 
 
 
-import java.lang.management.ManagementFactory;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,14 +10,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-import clojure.lang.Atom;
 import clojure.lang.Symbol;
 import clojure.lang.Var;
 import clojure.lang.RT;
-
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
-import javax.management.StandardMBean;
 
 /**
  * Hello world!
