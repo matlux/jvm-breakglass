@@ -142,6 +142,14 @@ public class AppTest
     	connectionOnPortRefused(1112);
     }
 
+    public void testSamePortStartTwice()
+    {
+    	NreplServer server = new NreplServer(1113,true,false,true); //start server listening onto port number
+    	NreplServer server2 = new NreplServer(1113,true,false,true); //start server listening onto port number
+
+    	server.stop();
+    	server2.stop();
+    }
     @Test
     public void testStartTwice()
     {
