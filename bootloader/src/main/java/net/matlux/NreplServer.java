@@ -14,7 +14,7 @@ import clojure.lang.Var;
 import clojure.lang.RT;
 
 /**
- * Hello world!
+ * NreplServer
  *
  */
 public class NreplServer implements Map<String,Object>, NreplMBean
