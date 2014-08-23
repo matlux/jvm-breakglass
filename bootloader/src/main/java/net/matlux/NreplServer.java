@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 import clojure.lang.Symbol;
 import clojure.lang.Var;
 import clojure.lang.RT;
@@ -36,9 +35,11 @@ public class NreplServer implements Map<String,Object>, NreplMBean
 	final static private Var SERVER = RT.var("net.matlux.server.nrepl", "server");
 
 	private int port;
+	private boolean propagateException;
 
-	public NreplServer(int port, boolean startOnCreation, boolean registerMBeanOnCreation) {
+	public NreplServer(int port, boolean startOnCreation, boolean registerMBeanOnCreation, boolean propagateException) {
 		this.port = port;
+		this.propagateException = propagateException;
 		LOGGER.info("Creating ReplStartup for Port=" + port);
 		try {
 			USE.invoke(REPL_SERVER_NS);
@@ -59,7 +60,7 @@ public class NreplServer implements Map<String,Object>, NreplMBean
 	}
 
     public NreplServer(int port) {
-		this(port, true,true);
+		this(port, true,true,false);
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -72,23 +73,29 @@ public class NreplServer implements Map<String,Object>, NreplMBean
     }
 
 	@Override
-    public void start() {
+    public boolean start() {
 		try {
 			START_REPL_SERVER.invoke(port);
 			LOGGER.info("Repl started successfully on Port = " + port);
 		} catch (Throwable t) {
 			LOGGER.log(Level.SEVERE, "Repl startup caught an error", t);
+			if (propagateException) throw new RuntimeException("Repl startup caught an error", t);
+			return false;
 		}
+		return true;
 	}
 
 	@Override
-	public void stop() {
+	public boolean stop() {
 		try {
 			STOP_REPL_SERVER.invoke();
 			LOGGER.info("Repl stopped successfully");
 		} catch (Throwable t) {
 			LOGGER.log(Level.SEVERE, "Repl stop caught an error", t);
+			if (propagateException) throw new RuntimeException("Repl stop caught an error", t);
+			return false;
 		}
+		return true;
 	}
 
 	@Override

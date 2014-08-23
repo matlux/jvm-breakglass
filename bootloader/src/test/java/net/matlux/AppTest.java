@@ -1,22 +1,48 @@
 package net.matlux;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import clojure.lang.RT;
 import clojure.lang.Symbol;
 import clojure.lang.Var;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import net.matlux.NreplServer;
 import net.matlux.testobjects.Address;
 import net.matlux.testobjects.Employee;
 import static net.matlux.fixtures.Fixtures.*;
-
+import static org.junit.Assert.*;
 /**
  * Unit test for simple App.
  */
-public class AppTest 
-    extends TestCase
+public class AppTest
 {
+	
+    @BeforeClass
+    public static void oneTimeSetUp() {
+        // one-time initialization code   
+        USE.invoke(REPL_CLIENT_NS);
+        USE.invoke(TEST_APP_NS);
+    	System.out.println("@BeforeClass - oneTimeSetUp");
+    }
+ 
+    @AfterClass
+    public static void oneTimeTearDown() {
+        // one-time cleanup code
+    	System.out.println("@AfterClass - oneTimeTearDown");
+    }
+ 
+    @Before
+    public void setUp() {
+        System.out.println("@Before - setUp");
+    }
+ 
+    @After
+    public void tearDown() {
+        System.out.println("@After - tearDown");
+    }
 	
     final static private Var USE = RT.var("clojure.core", "use");
     final static private Var DROP = RT.var("clojure.core", "drop");
@@ -25,26 +51,9 @@ public class AppTest
     final static private Var REMOTE_EXECUTE = RT.var("cl-java-introspector.client-example", "remote-execute");
     final static private Var REMOTE_CODE_FIXTURE = RT.var("cl-java-introspector.test-app", "test1");
     final static private Var REMOTE_CODE_RESULT_FIXTURE = RT.var("cl-java-introspector.test-app", "fixture-test1-result");
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
-    {
-        super( testName );
-        USE.invoke(REPL_CLIENT_NS);
-        USE.invoke(TEST_APP_NS);
-    }
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
-    }
-    
+
+
     private Object remoteConnect2ReplAndRunSomeCommands(int port) {
     	return REMOTE_EXECUTE.invoke("localhost", port, REMOTE_CODE_FIXTURE.deref());
     }
@@ -67,9 +76,10 @@ public class AppTest
     }
 
 
+    @Test
     public void testStartApp()
     {
-    	NreplServer server = new NreplServer(1112,false,false);
+    	NreplServer server = new NreplServer(1112,false,false,true);
     	setupFixtureDataOnServer(server);
 
     	
@@ -84,29 +94,28 @@ public class AppTest
     	server.stop();
     }
     
+    @Test
     public void testAutoStartStopApp()
     {
-    	NreplServer server = new NreplServer(1112,true,false);
+    	NreplServer server = new NreplServer(1112,true,false,true);
     	setupFixtureDataOnServer(server);
-
     	
     	canSuccessfullyRunRemoteCommands(1112);
-    	
     	
     	server.stop();
     	connectionOnPortRefused(1112);
     }
 
+    @Test
     public void testAutoRegisterStartStopApp()
     {
-    	NreplServer server = new NreplServer(1112,false,true); //start server listening onto port number
+    	NreplServer server = new NreplServer(1112,false,true,true); //start server listening onto port number
     	setupFixtureDataOnServer(server);
 
     	connectionOnPortRefused(1112);
     	
     	server.start();
     	canSuccessfullyRunRemoteCommands(1112);
-    	
     	
     	server.stop();
     	server.unregisterMBean();
@@ -114,9 +123,10 @@ public class AppTest
     	connectionOnPortRefused(1112);
     }
     
+    @Test
     public void testRegisterStartStopApp()
     {
-    	NreplServer server = new NreplServer(1112,false,false); //start server listening onto port number
+    	NreplServer server = new NreplServer(1112,false,false,true); //start server listening onto port number
     	server.registerMBean();
     	setupFixtureDataOnServer(server);
 
@@ -132,7 +142,26 @@ public class AppTest
     	connectionOnPortRefused(1112);
     }
 
-    
+    @Test
+    public void testStartTwice()
+    {
+    	NreplServer server = new NreplServer(1113); //start server listening onto port number
+    	assertEquals(1113, server.getPort());
+    	server.start();
+    	server.stop();
+    	server.unregisterMBean();
+    }
+    @Test
+    public void testStopTwice()
+    {	
+    	NreplServer server = new NreplServer(1113); //start server listening onto port number
+    	assertEquals(1113, server.getPort());
+    	server.stop();
+    	server.stop();
+    	server.unregisterMBean();
+    }
+   
+    @Test
     public void testStartStopServerThreadSafety1()
     {	//todo: start multiple servers from different threads
     	NreplServer server = new NreplServer(1113); //start server listening onto port number

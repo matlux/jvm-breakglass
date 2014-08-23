@@ -20,8 +20,8 @@ public class NreplServerSpring extends NreplServer implements ApplicationContext
     @Autowired
 	private ApplicationContext ctx;
 
-	public NreplServerSpring(int port, boolean startOnCreation, boolean registerMBeanOnCreation) {
-		super(port, startOnCreation, registerMBeanOnCreation);
+	public NreplServerSpring(int port, boolean startOnCreation, boolean registerMBeanOnCreation, boolean propagateException) {
+		super(port, startOnCreation, registerMBeanOnCreation, propagateException);
 	}
 
     public NreplServerSpring(int port) {

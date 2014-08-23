@@ -21,8 +21,10 @@ public final class MBeanRegistration {
 		try {
 			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 			registerMBean(mbs, getObjectName(), nreplServer);
+			LOGGER.log(Level.SEVERE, "MBean Registration of JVM-breakglass successful");
 		} catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "MBean Registration not successful", e);
+			LOGGER.log(Level.SEVERE, "MBean Registration of JVM-breakglass not successful", e);
+			throw new RuntimeException("MBean Registration of JVM-breakglass not successful", e);
 		}
 	}
 
@@ -30,8 +32,10 @@ public final class MBeanRegistration {
 		try {
 			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 			mbs.unregisterMBean(getObjectName());
+			LOGGER.log(Level.SEVERE, "MBean Unregistration of JVM-breakglass successful");
 		} catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "MBean Unregistration not successful", e);
+			LOGGER.log(Level.SEVERE, "MBean Unregistration of JVM-breakglass not successful", e);
+			throw new RuntimeException("MBean Unregistration of JVM-breakglass not successful", e);
 		}
 	}
 

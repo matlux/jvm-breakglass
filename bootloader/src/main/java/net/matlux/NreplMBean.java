@@ -8,8 +8,8 @@ public interface NreplMBean {
 
 	boolean isStarted();
 
-	void start();
+	boolean start();
 
-	void stop();
+	boolean stop();
 
 }
