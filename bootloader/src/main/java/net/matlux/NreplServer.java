@@ -20,10 +20,6 @@ import clojure.lang.RT;
 public class NreplServer implements Map<String,Object>, NreplMBean
 {
 	private static final Logger LOGGER = Logger.getLogger(NreplServer.class.getSimpleName());
-	
-	private Map<String, Object> objMap = new HashMap<String, Object>();
-	final static public int a=1225;
-
 
 	static public NreplServer instance=null;
 	
@@ -34,8 +30,9 @@ public class NreplServer implements Map<String,Object>, NreplMBean
     final static private Var STOP_REPL_SERVER = RT.var("net.matlux.server.nrepl","stop-server-now");
 	final static private Var SERVER = RT.var("net.matlux.server.nrepl", "server");
 
+	private final Map<String, Object> objMap = new HashMap<String, Object>();
+	private final boolean propagateException;
 	private int port;
-	private boolean propagateException;
 
 	public NreplServer(int port, boolean startOnCreation, boolean registerMBeanOnCreation, boolean propagateException) {
 		this.port = port;
@@ -55,7 +52,6 @@ public class NreplServer implements Map<String,Object>, NreplMBean
 			registerMBean();
 		}
 
-		objMap.put("a_test_obj", "this is a test String.");
 		instance=this;
 	}
 

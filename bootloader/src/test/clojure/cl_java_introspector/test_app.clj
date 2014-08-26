@@ -30,6 +30,7 @@
 
 (defn run-remote-test-code1 [port code]
   (let [server (NreplServer. port)
+                 _ (.put server "a_test_obj" "this is a test String.")
                  original-emp (Employee. Fixtures/EMPLOYEE_FNAME1 Fixtures/EMPLOYEE_LNAME1 (Address. Fixtures/STREET1 Fixtures/ZIPCODE1 Fixtures/CITY1))
                  _ (.put server "employee1" original-emp)
                  res (remote-execute "localhost" 1114 code)]
@@ -45,6 +46,7 @@
 (deftest test-app-with-NreplServerSpring
   (testing "test"
     (is (= (let [server (NreplServer. 1113)
+                 _ (.put server "a_test_obj" "this is a test String.")
                  original-emp (Employee. Fixtures/EMPLOYEE_FNAME1 Fixtures/EMPLOYEE_LNAME1 (Address. Fixtures/STREET1 Fixtures/ZIPCODE1 Fixtures/CITY1))
                  _ (.put server "employee1" original-emp)
                  res (remote-execute "localhost" 1113 test1)]
