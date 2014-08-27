@@ -66,6 +66,8 @@ public class AppTest
     	assertTrue(result.equals(REMOTE_CODE_RESULT_FIXTURE.deref()));
     }
     private void setupFixtureDataOnServer(NreplServer server) {
+		server.put("a_test_obj", "this is a test String.");
+		System.out.println("Added a_test_obj to server");
     	Employee originalEmployee = new Employee(EMPLOYEE_FNAME1,EMPLOYEE_LNAME1,new Address(STREET1, ZIPCODE1, CITY1) );
     	server.put("employee1", originalEmployee);
     	System.out.println("Added employe1 to server");
