@@ -63,7 +63,7 @@
          <directory>src/main/clojure</directory>
       </resource>
       <resource>
-         <directory>src/main/resources</directory>
+         <directory>src/test/resources</directory>
       </resource>
     </resources>
     <testResources>
