@@ -1,6 +1,10 @@
 nRepl hook for Java
 ===================
 
+Build Status
+------------
+
+[![Build Status](https://travis-ci.org/matlux/jvm-breakglass.svg?branch=master)](https://travis-ci.org/matlux/jvm-breakglass)
 
 Background on nRepl
 -------------------
