@@ -15,17 +15,16 @@ import clojure.lang.RT;
 public class ReplStartup 
 {
 	
-	final static public int a=1225;
 	private Map<String, Object> objMap = new HashMap<String, Object>();
 	static public ReplStartup instance=null;
 	
 	final static public int DEFAULT_PORT=1112;
     final static private Var USE = RT.var("clojure.core", "use");
-    final static private Symbol SERVER_SOCKET = Symbol.intern("server.socket");
+    final static private Symbol SERVER_SOCKET_NS = Symbol.intern("server.socket");
     final static private Var CREATE_REPL_SERVER = RT.var("server.socket","create-repl-server");
 
     ReplStartup(int port) {
-    	USE.invoke(SERVER_SOCKET);
+    	USE.invoke(SERVER_SOCKET_NS);
         CREATE_REPL_SERVER.invoke(port);
         instance=this;
     }
