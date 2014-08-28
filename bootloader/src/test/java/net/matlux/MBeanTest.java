@@ -20,7 +20,7 @@ public class MBeanTest
 	@Before
     public void setUp() {
         System.out.println("@Before - setUp " + MBeanTest.class.getSimpleName());
-    	nreplServer = new NreplServer(1111, false,false,true);
+    	nreplServer = new NreplServer(1111, false,false,true,false);
 		nreplServer.registerMBean();
     }
  
@@ -46,7 +46,7 @@ public class MBeanTest
 	@Test(expected = RuntimeException.class)
 	public void testRegisterTwice() {
 
-		NreplServer nreplServer2 = new NreplServer(1112, false,false,true);
+		NreplServer nreplServer2 = new NreplServer(1112, false,false,true,false);
 		nreplServer2.registerMBean();
 	}
 	@Test(expected = RuntimeException.class)

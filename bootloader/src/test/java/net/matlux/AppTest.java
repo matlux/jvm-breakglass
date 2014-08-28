@@ -38,12 +38,12 @@ public class AppTest
  
     @Before
     public void setUp() {
-        System.out.println("@Before - setUp");
+        System.out.println("@Before - setUp" + MBeanTest.class.getSimpleName());
     }
  
     @After
     public void tearDown() {
-        System.out.println("@After - tearDown");
+        System.out.println("@After - tearDown" + MBeanTest.class.getSimpleName());
     }
     
     final static private Var USE = RT.var("clojure.core", "use");
@@ -92,7 +92,7 @@ public class AppTest
     @Test
     public void testStartApp()
     {
-        NreplServer server = new NreplServer(1112,false,false,true);
+        NreplServer server = new NreplServer(1112,false,false,true,false);
         setupFixtureDataOnServer(server);
         connectionOnPortRefused(1112);
         server.start();
@@ -114,7 +114,7 @@ public class AppTest
     @Test
     public void testAutoStartStopApp()
     {
-        NreplServer server = new NreplServer(1112,true,false,true);
+        NreplServer server = new NreplServer(1112,true,false,true,false);
         setupFixtureDataOnServer(server);
         
         canSuccessfullyRunRemoteCommands(REMOTE_CODE_FIXTURE, REMOTE_CODE_RESULT_FIXTURE, 1112);
@@ -126,7 +126,7 @@ public class AppTest
     @Test
     public void testAutoRegisterStartStopApp()
     {
-        NreplServer server = new NreplServer(1112,false,true,true); //start server listening onto port number
+        NreplServer server = new NreplServer(1112,false,true,true,false); //start server listening onto port number
         setupFixtureDataOnServer(server);
 
         connectionOnPortRefused(1112);
@@ -143,7 +143,7 @@ public class AppTest
     @Test
     public void testRegisterStartStopApp()
     {
-        NreplServer server = new NreplServer(1112,false,false,true); //start server listening onto port number
+        NreplServer server = new NreplServer(1112,false,false,true,false); //start server listening onto port number
         try {
           server.registerMBean();
           setupFixtureDataOnServer(server);
@@ -164,8 +164,8 @@ public class AppTest
 
     public void testSamePortStartTwice()
     {
-        NreplServer server = new NreplServer(1113,true,false,true); //start server listening onto port number
-        NreplServer server2 = new NreplServer(1113,true,false,true); //start server listening onto port number
+        NreplServer server = new NreplServer(1113,true,false,true,false); //start server listening onto port number
+        NreplServer server2 = new NreplServer(1113,true,false,true,false); //start server listening onto port number
 
         server.stop();
         server2.stop();

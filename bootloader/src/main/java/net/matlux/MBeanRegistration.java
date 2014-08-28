@@ -15,24 +15,26 @@ public final class MBeanRegistration {
 
 	private static final Logger LOGGER = Logger.getLogger(MBeanRegistration.class.getSimpleName());
 
-	public static void registerNreplServerAsMBean(NreplMBean nreplServer) {
+	public static void registerNreplServerAsMBean(NreplMBean nreplServer, boolean logExceptionStack) {
 		try {
 			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 			registerMBean(mbs, getObjectName(), nreplServer);
-			LOGGER.log(Level.SEVERE, "MBean Registration of JVM-breakglass successful");
+			LOGGER.log(Level.INFO, "MBean Registration of JVM-breakglass successful");
 		} catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "MBean Registration of JVM-breakglass not successful", e);
+			if (logExceptionStack) LOGGER.log(Level.SEVERE, "MBean Registration of JVM-breakglass not successful", e);
+			else LOGGER.log(Level.INFO, "MBean Registration of JVM-breakglass not successful");
 			throw new RuntimeException("MBean Registration of JVM-breakglass not successful", e);
 		}
 	}
 
-	public static void unregisterNreplServerAsMBean() {
+	public static void unregisterNreplServerAsMBean(boolean logExceptionStack) {
 		try {
 			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 			mbs.unregisterMBean(getObjectName());
-			LOGGER.log(Level.SEVERE, "MBean Unregistration of JVM-breakglass successful");
+			LOGGER.log(Level.INFO, "MBean Unregistration of JVM-breakglass successful");
 		} catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "MBean Unregistration of JVM-breakglass not successful", e);
+			if (logExceptionStack) LOGGER.log(Level.SEVERE, "MBean Unregistration of JVM-breakglass not successful", e);
+			else LOGGER.log(Level.INFO, "MBean Unregistration of JVM-breakglass not successful");
 			throw new RuntimeException("MBean Unregistration of JVM-breakglass not successful", e);
 		}
 	}

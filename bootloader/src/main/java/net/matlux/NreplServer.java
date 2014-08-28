@@ -31,12 +31,15 @@ public class NreplServer implements Map<String,Object>, NreplMBean
 	final static private Var SERVER = RT.var("net.matlux.server.nrepl", "server");
 
 	private final Map<String, Object> objMap = new HashMap<String, Object>();
+	private final boolean logExceptionStack;
 	private final boolean propagateException;
 	private int port;
 
-	public NreplServer(int port, boolean startOnCreation, boolean registerMBeanOnCreation, boolean propagateException) {
+
+	public NreplServer(int port, boolean startOnCreation, boolean registerMBeanOnCreation, boolean propagateException, boolean logExceptionStack) {
 		this.port = port;
 		this.propagateException = propagateException;
+		this.logExceptionStack = logExceptionStack;
 		LOGGER.info("Creating ReplStartup for Port=" + port);
 		try {
 			USE.invoke(REPL_SERVER_NS);
@@ -56,7 +59,7 @@ public class NreplServer implements Map<String,Object>, NreplMBean
 	}
 
     public NreplServer(int port) {
-		this(port, true,true,false);
+		this(port, true,true,false,true);
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -74,7 +77,8 @@ public class NreplServer implements Map<String,Object>, NreplMBean
 			START_REPL_SERVER.invoke(port);
 			LOGGER.info("Repl started successfully on Port = " + port);
 		} catch (Throwable t) {
-			LOGGER.log(Level.SEVERE, "Repl startup caught an error", t);
+			if (logExceptionStack) LOGGER.log(Level.SEVERE, "Repl startup caught an error", t);
+			else LOGGER.log(Level.INFO, "Repl startup caught an error");
 			if (propagateException) throw new RuntimeException("Repl startup caught an error", t);
 			return false;
 		}
@@ -87,7 +91,8 @@ public class NreplServer implements Map<String,Object>, NreplMBean
 			STOP_REPL_SERVER.invoke();
 			LOGGER.info("Repl stopped successfully");
 		} catch (Throwable t) {
-			LOGGER.log(Level.SEVERE, "Repl stop caught an error", t);
+			if (logExceptionStack) LOGGER.log(Level.SEVERE, "Repl stop caught an error", t);
+			else LOGGER.log(Level.INFO, "Repl stop caught an error");
 			if (propagateException) throw new RuntimeException("Repl stop caught an error", t);
 			return false;
 		}
@@ -110,11 +115,11 @@ public class NreplServer implements Map<String,Object>, NreplMBean
 	}
 
 	public void registerMBean() {
-		MBeanRegistration.registerNreplServerAsMBean(this);
+		MBeanRegistration.registerNreplServerAsMBean(this, logExceptionStack);
 	}
 
 	public void unregisterMBean() {
-		MBeanRegistration.unregisterNreplServerAsMBean();
+		MBeanRegistration.unregisterNreplServerAsMBean(logExceptionStack);
 	}
 
 	public Object getObj(String key) {
