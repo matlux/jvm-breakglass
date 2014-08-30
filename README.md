@@ -14,7 +14,7 @@ What is this project about?
 
 Clojure and REPL can be introduced into a pure Java project to improve troubleshooting without having to force a team to migrate their code away from Java.
 
-nRepl is easy to start in Clojure but it needs a tiny bit of work to inject it into your java process. If your using Spring and Java, this project has done that for you. This project is a Maven module that you can integrate in your java project and inject easily the Repl in your application.
+nRepl is easy to start in Clojure but it needs a tiny bit of work to inject it into your java process. If you are using Spring and Java, this project has done that for you. This project is a Maven module that you can integrate in your java project and inject easily the Repl in your application.
 
 Watch these videos to get an introduction:
 * [EuroClojure2014](http://vimeo.com/100425265)
