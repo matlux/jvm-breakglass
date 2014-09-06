@@ -39,7 +39,7 @@ public final class MBeanRegistration {
 		}
 	}
 
-	static ObjectName getObjectName() throws MalformedObjectNameException {
+	public static ObjectName getObjectName() throws MalformedObjectNameException {
 		return new ObjectName("net.matlux:name=Nrepl");
 	}
 
