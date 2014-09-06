@@ -33,6 +33,7 @@ public class MBeanTest {
 	@After
 	public void tearDown() {
 		try {
+			nreplServer.stop();
 			nreplServer.unregisterMBean();
 		} catch (Throwable t) {
 			System.out.println("ignore failure of unregistration!");
@@ -85,6 +86,34 @@ public class MBeanTest {
 			jmxServer.stop();
 		}
 	}
+
+	@Test
+	public void testStartStopViaJMX() throws Exception {
+		int port = 9876;
+		JMXServiceURL url = new JMXServiceURL(String.format("service:jmx:rmi:///jndi/rmi://localhost:%d/jmxrmi", port));
+		JMXConnectorServer jmxServer = createJMXServer(port, url);
+		try {
+			jmxServer.start();
+			assertFalse(nreplServer.isStarted());
+			JMXConnector connector = JMXConnectorFactory.connect(url);
+			try {
+				MBeanServerConnection conn = connector.getMBeanServerConnection();
+				ObjectName objectName = MBeanRegistration.getObjectName();
+				NreplMBean proxy = JMX.newMBeanProxy(conn, objectName, NreplMBean.class);
+				assertFalse(proxy.isStarted());
+				proxy.start();
+				assertTrue(proxy.isStarted());
+				proxy.stop();
+				assertFalse(proxy.isStarted());
+			} finally {
+				connector.close();
+			}
+		} finally {
+			jmxServer.stop();
+		}
+		assertFalse(nreplServer.isStarted());
+	}
+
 
 	private JMXConnectorServer createJMXServer(int port, JMXServiceURL url) throws Exception {
 		MBeanServer server = ManagementFactory.getPlatformMBeanServer();
