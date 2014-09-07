@@ -2,8 +2,7 @@ nRepl hook for Java
 ===================
 
 [![Build Status](https://travis-ci.org/matlux/jvm-breakglass.svg?branch=master)](https://travis-ci.org/matlux/jvm-breakglass)
-
-Latest version: [![Clojars Project](http://clojars.org/net.matlux/jvm-breakglass/latest-version.svg)]
+[![Clojars Project](http://clojars.org/net.matlux/jvm-breakglass/latest-version.svg)]
 
 Background on nRepl
 -------------------
