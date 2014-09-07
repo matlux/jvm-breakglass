@@ -4,7 +4,7 @@
   <groupId>net.matlux</groupId>
   <artifactId>jvm-breakglass</artifactId>
   <packaging>jar</packaging>
-  <version>0.0.7-SNAPSHOT</version>
+  <version>0.0.7</version>
   <url>http://www.matlux.net</url>
   <description>Setting up an nrepl can be useful to introspect into the JVM for troubleshouting/investigation or testing of regular Java applications. You can connect onto a process and use a Clojure prompt interactivelly or have client application that sends and execute Java code dynamically. It works because the code injected is Clojure and that the Clojure run-time allows to evaluate code at run-time. Furthermore Clojure interops very easily with Java i.e. you can translate pretty much any Java code into Clojure and access all your Java object from the injected Clojure code. This is the perfect tool to access the inside of your JVM process live after it has been deployed. To run any fancy change of code scenario, any data structure or call any method you don't need to redeploy your java code. You can see what your process sees in real time. This is an unvaluable tool to use to develop and maintain a java application.</description>
   <organization>
@@ -22,7 +22,7 @@
   <scm>
     <connection>https://github.com/matlux/jvm-breakglass.git</connection>
     <developerConnection>git@github.com:matlux/jvm-breakglass.git</developerConnection>
-    <tag>f921287</tag>
+    <tag>d3ea0a0</tag>
     <url>https://github.com/matlux/jvm-breakglass</url>
   </scm>
   <build>
