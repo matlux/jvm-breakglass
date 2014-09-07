@@ -1,5 +1,9 @@
 package net.matlux;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -20,7 +24,7 @@ import static org.junit.Assert.*;
  */
 public class AppTest
 {
-    
+
     @BeforeClass
     public static void oneTimeSetUp() {
         // one-time initialization code   
@@ -68,7 +72,7 @@ public class AppTest
     }
     
     private void canSuccessfullyRunRemoteCommands(Var codeFixture,Var expectedResult, int port) {
-        Object result = remoteConnect2ReplAndRunSomeCommands(codeFixture, 1112);
+        Object result = remoteConnect2ReplAndRunSomeCommands(codeFixture, port);
         System.out.println("testStartApp result=" + result);
         System.out.println("testStartApp expected=" + expectedResult.deref());
         System.out.println("diff=" + DIFF.invoke(result, expectedResult.deref()));
@@ -188,14 +192,48 @@ public class AppTest
         server.stop();
         server.unregisterMBean();
     }
+
+    final int NB_THREADS = 4;
+    final int ITERATIONS = 1000;
+    private static final int PORT_NUMBER = 1114;
+
    
     @Test
-    public void testStartStopServerThreadSafety1()
+    public void testStartStopServerThreadSafety1() throws InterruptedException
     {    //todo: start multiple servers from different threads
-        NreplServer server = new NreplServer(1113); //start server listening onto port number
-        assertEquals(1113, server.getPort());
+        final NreplServer server = new NreplServer(PORT_NUMBER,true,false,true,true);//start server listening onto port number
+        assertEquals(PORT_NUMBER, server.getPort());
+
+        setupFixtureDataOnServer(server);
+
+        ExecutorService es = Executors.newFixedThreadPool(NB_THREADS);
+
+
+        for(int i=0; i<NB_THREADS ;i++) {
+            final int threadNb = i;
+            es.submit(new Runnable() {
+                @Override
+                public void run() {
+                    for(int j=0 ; j<ITERATIONS ; j++) {
+                        if(threadNb % 2 == 0) {
+                            server.start();
+                        } else {
+                            server.stop();
+                        }
+                    }
+                }
+            });
+        }
+        es.shutdown();
+        es.awaitTermination(1,TimeUnit.DAYS);
+
         server.stop();
-        server.unregisterMBean();
+        connectionOnPortRefused(PORT_NUMBER);
+        server.start();
+        canSuccessfullyRunRemoteCommands(REMOTE_CODE_FIXTURE, REMOTE_CODE_RESULT_FIXTURE, PORT_NUMBER);
+        server.stop();
+        connectionOnPortRefused(PORT_NUMBER);
+        //server.unregisterMBean();
     }
 }
 
