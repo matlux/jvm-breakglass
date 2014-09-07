@@ -29,7 +29,7 @@ How to install the REPL in your application with Spring
 <dependency>
   <groupId>net.matlux</groupId>
   <artifactId>jvm-breakglass</artifactId>
-  <version>0.0.6</version>
+  <version>[![Clojars Project](http://clojars.org/net.matlux/jvm-breakglass/latest-version.svg)]</version>
 </dependency>
 ```
 
@@ -55,7 +55,7 @@ No problems, just instanciate the following class in your application rather tha
 
 Repeat the call to put with as many object as you want to register on the repl. The NreplServer instance is a Map onto which you can add Object instances that you can retreive later on under the repl access.
 
-MBean registration (will be available in R_0.0.7)
+MBean registration (new in R_0.0.7)
 ------------------
 
 It is also possible to register the NreplServer as MBean for access via a JMX console. The registred MBean is found under the name `net.matlux:name=Nrepl`. The MBean has the following properties and operations.
