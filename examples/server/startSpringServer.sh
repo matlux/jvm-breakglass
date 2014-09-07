@@ -18,9 +18,10 @@ CLOJURE=$CLOJURE:$REPO/net/matlux/jvm-breakglass/0.0.7/jvm-breakglass-0.0.7.jar
 CLOJURE=$CLOJURE:./target/server-test-1.0-SNAPSHOT.jar
 CLOJURE=$CLOJURE:${PWD}
 
-#OPTIONS=-Dcom.sun.management.jmxremote.port=9595
-#OPTIONS=$OPTIONS\ -Dcom.sun.management.jmxremote.ssl=false
-#OPTIONS=$OPTIONS\ -Dcom.sun.management.jmxremote.authenticate=false
+OPTIONS=-Dcom.sun.management.jmxremote.port=9595
+OPTIONS=$OPTIONS\ -Dcom.sun.management.jmxremote.ssl=false
+OPTIONS=$OPTIONS\ -Dcom.sun.management.jmxremote.authenticate=false
+OPTIONS=$OPTIONS\ -Djava.rmi.server.hostname=localhost
 #OPTIONS=$OPTIONS\ -Djava.rmi.server.hostname=192.168.0.20
 
 java -cp "$CLOJURE" $OPTIONS net.matlux.testserver.SpringServerExample "$@"
