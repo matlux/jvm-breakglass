@@ -3,6 +3,8 @@ nRepl hook for Java
 
 [![Build Status](https://travis-ci.org/matlux/jvm-breakglass.svg?branch=master)](https://travis-ci.org/matlux/jvm-breakglass)
 
+Latest version: [![Clojars Project](http://clojars.org/net.matlux/jvm-breakglass/latest-version.svg)]
+
 Background on nRepl
 -------------------
 
@@ -29,7 +31,7 @@ How to install the REPL in your application with Spring
 <dependency>
   <groupId>net.matlux</groupId>
   <artifactId>jvm-breakglass</artifactId>
-  <version>[![Clojars Project](http://clojars.org/net.matlux/jvm-breakglass/latest-version.svg)]</version>
+  <version>0.0.7</version>
 </dependency>
 ```
 
