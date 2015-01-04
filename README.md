@@ -93,6 +93,14 @@ Quick demonstration of this project
     ./startSpringServer.sh
 ```
 
+You should now see the following message repeating itself on the screen:
+
+    Retrieve Employees from NY or London:
+    Retrieve Employees from NY or London:
+    ...
+
+* Leave the above server running and open a different shell window before you continue
+
 * Start the repl client which introspects into the Java server process
 
 ```sh
@@ -118,7 +126,7 @@ Quick demonstration of this project
   (get-bean "department")
 
   ;what methods or fields has the obj?
-  (methods-info  (get-bean "departement"))
+  (methods-info  (get-bean "department"))
 
 ```
 
