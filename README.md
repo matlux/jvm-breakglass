@@ -74,6 +74,12 @@ The registration/unregistration of the NReplServer to the MBeanServer must be do
 Quick demonstration of this project
 -----------------------------------
 
+## Pre-requisites:
+
+* You must have [leinengen](https://github.com/technomancy/leiningen) must be installed. Otherwise follow the installation process on this [site](https://github.com/technomancy/leiningen).
+
+## Tutorial
+
 * clone this repo and compile the example
 
 ```sh
@@ -99,9 +105,11 @@ You should now see the following message repeating itself on the screen:
     Retrieve Employees from NY or London:
     ...
 
+Notes: Ctrl-c does not seem to kill the process for some reason. Please find it's PID and kill it with `kill -9 [pid of the process]` from a different window when you've finished the demonstration.
+
 * Leave the above server running and open a different shell window before you continue
 
-You don't need to be inside the current directory of any particular project. Actually it's best to be outside of any project so you don't pull any specific project dependencies and introduce an uncertainty. If in doubt, type `cd /tmp` to make sure you're outside of any specific Lein project.
+Notes: You don't need to be inside the current directory of any particular project. Actually it's best to be outside of any project so you don't pull any specific project dependencies and introduce an uncertainty. If in doubt, type `cd /tmp` to make sure you're outside of any specific Lein project.
 
 * Start the repl client which introspects into the Java server process
 
