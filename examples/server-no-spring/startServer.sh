@@ -2,7 +2,7 @@ REPO=~/.m2/repository
 
 
 CLOJURE=$CLASSPATH:$REPO/org/clojure/clojure/1.6.0/clojure-1.6.0.jar
-CLOJURE=$CLOJURE:$REPO/org/clojure/tools.nrepl/0.2.1/tools.nrepl-0.2.1.jar
+CLOJURE=$CLOJURE:$REPO/org/clojure/tools.nrepl/0.2.3/tools.nrepl-0.2.3.jar
 CLOJURE=$CLOJURE:./src/test
 CLOJURE=$CLOJURE:${PWD}
 CLOJURE=$CLOJURE:$REPO/me/raynes/fs/1.4.5/fs-1.4.5.jar
