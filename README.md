@@ -101,6 +101,8 @@ You should now see the following message repeating itself on the screen:
 
 * Leave the above server running and open a different shell window before you continue
 
+You don't need to be inside the current directory of any particular project. Actually it's best to be outside of any project so you don't pull any specific project dependencies and introduce an uncertainty. If in doubt, type `cd /tmp` to make sure you're outside of any specific Lein project.
+
 * Start the repl client which introspects into the Java server process
 
 ```sh
