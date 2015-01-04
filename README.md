@@ -347,6 +347,6 @@ See [cl-java-introspector.core](https://github.com/matlux/jvm-breakglass/blob/ma
 
 ## License
 
-Copyright (C) 2014 Mathieu Gauthron
+Copyright (C) 2015 Mathieu Gauthron
 
 Distributed under the Eclipse Public License, the same as Clojure.
