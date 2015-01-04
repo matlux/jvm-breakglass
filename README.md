@@ -76,7 +76,8 @@ Quick demonstration of this project
 
 ## Pre-requisites:
 
-* You must have [leinengen](https://github.com/technomancy/leiningen) must be installed. Otherwise follow the installation process on this [site](https://github.com/technomancy/leiningen).
+* You must have [leinengen](https://github.com/technomancy/leiningen)  installed. Otherwise follow the installation process on this [site](https://github.com/technomancy/leiningen).
+* You must have [Maven](http://maven.apache.org/guides/getting-started/maven-in-five-minutes.html) installed. Follow the [this](http://maven.apache.org/guides/getting-started/maven-in-five-minutes.html) otherwise.
 
 ## Tutorial
 
