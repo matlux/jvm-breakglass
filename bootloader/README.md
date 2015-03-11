@@ -1,13 +1,15 @@
 # How to release with signature with maven:
 
-* change <version>0.0.7</version>
-* change <tag> to current git revision
-* commit
-* add tag R_0.0.7
+* change <version>0.0.8</version>  (pom.xml)
+* change <tag> to current git revision (pom.xml)
+* git commit -m "release R_0.0.8" -a 
+* add tag R_0.0.8
 ```
 mvn verify gpg:sign install:install deploy:deploy
 ```
-
+* git tag -a R_0.0.8 -m "Release of version 0.0.8" 2881362
+* change <version> to SNAPSHOT in pom.xml
+* git commit -m "changed version to 0.0.8-SNAPSHOT" -a
 
 Make sure you add clojars to the <code>pom.xml</code>:
 
