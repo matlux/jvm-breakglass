@@ -30,7 +30,7 @@ How to install the REPL in your application with Spring
 <dependency>
   <groupId>net.matlux</groupId>
   <artifactId>jvm-breakglass</artifactId>
-  <version>0.0.7</version>
+  <version>0.0.8</version>
 </dependency>
 ```
 
