@@ -1,5 +1,9 @@
 # How to release with signature with maven:
 
+* change <version>0.0.7</version>
+* change <tag> to current git revision
+* commit
+* add tag R_0.0.7
 ```
 mvn verify gpg:sign install:install deploy:deploy
 ```
