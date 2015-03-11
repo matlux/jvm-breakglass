@@ -10,6 +10,8 @@ mvn verify gpg:sign install:install deploy:deploy
 * git tag -a R_0.0.8 -m "Release of version 0.0.8" 2881362
 * change <version> to SNAPSHOT in pom.xml
 * git commit -m "changed version to 0.0.8-SNAPSHOT" -a
+* git push
+* git push --tags
 
 Make sure you add clojars to the <code>pom.xml</code>:
 
