@@ -1,0 +1,31 @@
+name: Build
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        java: ['8', '17', '21', '25']
+        clojure: ['1.6.0', '1.12.6']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+          cache: maven
+      - name: Unit and integration tests
+        run: mvn -B -f bootloader/pom.xml -Dclojure.version=${{ matrix.clojure }} clean verify
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-java-${{ matrix.java }}-clojure-${{ matrix.clojure }}
+          path: |
+            bootloader/target/surefire-reports/
+            bootloader/target/failsafe-reports/

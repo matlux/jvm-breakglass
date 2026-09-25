@@ -1,19 +1,21 @@
-(ns net.matlux.server.nrepl)
-
-(use '[clojure.tools.nrepl.server :only (start-server stop-server)])
+(ns net.matlux.server.nrepl
+  (:require [clojure.tools.nrepl.server :as nrepl]))
 
 (def server nil)
 
 (defn safe-stop-server [server]
 	(when (not (nil? server))
-		(stop-server server)))
+		(nrepl/stop-server server)))
 
 (defn start-server-now [port]
-  (alter-var-root (var server) (fn [old-server]
-									(safe-stop-server old-server)
-									(start-server :port port))))
+  (locking #'server
+    (safe-stop-server server)
+    ;; Clear the stopped handle even if binding the replacement port fails.
+    (alter-var-root #'server (constantly nil))
+    (alter-var-root #'server
+                    (fn [_] (nrepl/start-server :port port :bind "127.0.0.1")))))
 
 (defn stop-server-now []
-	(alter-var-root (var server) (fn [old-server]
-									(safe-stop-server old-server)
-									nil)))
+  (locking #'server
+    (safe-stop-server server)
+    (alter-var-root #'server (constantly nil))))

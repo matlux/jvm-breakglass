@@ -55,7 +55,11 @@
        </bean>
        <!-- <import resource="classpath:spring/dependency.xml" /> -->
        <bean id="repl"
-              class="net.matlux.NreplServerSpring">
-              <constructor-arg index="0" value="1112" />
+              class="net.matlux.NreplServerSpring" destroy-method="stop">
+              <constructor-arg index="0" value="0" />
+              <constructor-arg index="1" value="true" />
+              <constructor-arg index="2" value="false" />
+              <constructor-arg index="3" value="true" />
+              <constructor-arg index="4" value="false" />
        </bean>
 </beans>

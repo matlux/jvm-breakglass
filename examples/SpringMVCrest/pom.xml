@@ -75,7 +75,7 @@
 	<repositories>
 		<repository>
 		  <id>clojars.org</id>
-		  <url>http://clojars.org/repo</url>
+		  <url>https://repo.clojars.org</url>
 		</repository>
 	</repositories>
 </project>

@@ -8,7 +8,8 @@
     (with-open [conn (repl/connect :host hostname :port port)]
      (-> (repl/client conn 1000)
        (repl/message {:op :eval :code code})
-       repl/response-values))
+       repl/response-values
+       doall))
      (catch java.net.ConnectException e
          ;(println "Caught" (.getMessage e))
          "cannot connect")
@@ -54,4 +55,3 @@
   (println (remote-execute "localhost" 1112 code2execute))
   (System/exit 0)
   )
-
