@@ -3,6 +3,8 @@
 [![Build](https://github.com/matlux/jvm-breakglass/actions/workflows/build.yml/badge.svg)](https://github.com/matlux/jvm-breakglass/actions/workflows/build.yml)
 [![Clojars Project](https://img.shields.io/clojars/v/net.matlux/jvm-breakglass.svg)](https://clojars.org/net.matlux/jvm-breakglass)
 
+![JVM Breakglass emergency kit with a REPL and coffee](docs/images/jvm-breakglass-banner.png)
+
 Embed an nREPL server in a Java application to inspect live objects and evaluate
 Clojure expressions inside its JVM. Register objects directly or access beans
 from a Spring application context, and control the listener through JMX.
