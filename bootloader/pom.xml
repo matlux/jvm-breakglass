@@ -13,7 +13,7 @@
   </organization>
   <licenses>
     <license>
-      <name>Copyright (C) 2014 Mathieu Gauthron. Distributed under the Eclipse Public License.</name>
+      <name>Copyright (C) 2014–2026 Mathieu Gauthron. Distributed under the Eclipse Public License.</name>
       <url>http://opensource.org/licenses/eclipse-1.0.php</url>
       <distribution>repo</distribution>
       <comments>Same as Clojure.</comments>
