@@ -110,7 +110,7 @@ In JConsole, attach to the local application JVM, open **MBeans â†’ net.matlux â
 then invoke the lowercase `start` operation. `Started` becomes true. Connect with
 `lein repl :connect 127.0.0.1:1112`; invoke `stop` when finished. Change the `Port`
 attribute before the next `start` to choose another port. Port `0` asks the OS to
-choose one; read `Port` after starting to see the result.
+choose one on each start; read `Port` after starting to see the result.
 
 The equivalent Spring bean leaves the REPL stopped until JMX starts it:
 

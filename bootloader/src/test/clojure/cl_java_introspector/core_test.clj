@@ -1,7 +1,8 @@
 (ns cl-java-introspector.core-test
   (:require [clojure.test :refer :all]
             [cl-java-introspector.core :as inspect]
-            [cl-java-introspector.client-example :as client])
+            [cl-java-introspector.client-example :as client]
+            [net.matlux.server.nrepl :as server])
   (:import [java.util ArrayList HashMap]
            [net.matlux NreplServer]
            [net.matlux.testobjects Address Employee]))
@@ -56,3 +57,16 @@
                   (fn [_] (lazy-seq (throw (IllegalStateException. "bad response"))))]
       (is (thrown? IllegalStateException (client/remote-execute "localhost" 0 "bad")))
       (is @closed?))))
+
+(deftest transient-bind-failure-allows-native-socket-release
+  (let [attempts (atom 0)]
+    (with-redefs [clojure.tools.nrepl.server/start-server
+                  (fn [& _]
+                    (if (< (swap! attempts inc) 3)
+                      (throw (java.net.BindException. "still closing"))
+                      {:port 12345}))
+                  clojure.tools.nrepl.server/stop-server (fn [_])]
+      (try
+        (is (= {:port 12345} (server/start-server-now 12345)))
+        (is (= 3 @attempts))
+        (finally (server/stop-server-now))))))

@@ -11,7 +11,7 @@ public interface NreplMBean {
 
     /**
      * Changes the port used on the next start; does not restart a running listener.
-     * @param port port from 0 to 65535; zero requests an available port
+     * @param port port from 0 to 65535; zero requests an available port on each start
      */
 	void setPort(int port);
 

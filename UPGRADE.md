@@ -160,8 +160,8 @@ not claim to cover every arbitrary object graph or hosting container.
 
 ## Validation
 
-See the validation record below for the actual local results. GitHub Actions is
-configured but has not run remotely from this unpublished checkout.
+See the validation record below for the local results. GitHub Actions runs the
+full matrix on [PR #27](https://github.com/matlux/jvm-breakglass/pull/27).
 
 ```sh
 mvn -f bootloader/pom.xml clean verify
@@ -171,9 +171,9 @@ mvn -f bootloader/pom.xml dependency:tree
 ```
 
 The Java unit phase contains three registry tests and one JUnit bridge that runs
-five Clojure tests (15 assertions). The integration phase contains nine tests.
-That is **17 behavioral test cases**, reported by Maven as 13 JUnit methods because
-five Clojure tests share one bridge method.
+six Clojure tests (17 assertions). The integration phase contains eleven tests.
+That is **20 behavioral test cases**, reported by Maven as 15 JUnit methods because
+six Clojure tests share one bridge method.
 
 The first Clojure 1.12.6 experiment passed unit tests but failed remote eval.
 Protocol diagnostics identified missing `clojure.core` references in the `user`
@@ -205,7 +205,36 @@ turn it into a release.
 | Javadocs | Generated successfully; public API documentation checked by Javadoc. |
 | Packaged JAR | Clojure sources present; test Spring XML and fixture classes absent. |
 
-Java 17, 21 and 25 are configured in CI but were not installed locally and have
-not been executed in this session. The example applications remain outside this
+The initial local runs on 2026-09-25 used JDKs 8 and 23; JDKs 17, 21 and 25
+were delegated to CI. The example applications remain outside this
 verification. Maven and dependency caches were placed in temporary directories;
 no machine-wide Maven installation was changed.
+
+### CI follow-up, 2026-09-26
+
+Linux CI exposed rapid fixed-port rebind failures and a shutdown-observation race.
+The follow-up preserves the requested port separately from the assigned port,
+so port zero continues to select an available port on every start. Startup and
+port publication share the Clojure lifecycle lock. Fixed-port binding allows a
+one-second retry window for `BindException` while a native accept releases the
+closed socket; interruption and other failures propagate normally, and an
+occupied port still fails. The shutdown test checks the closed socket directly
+and waits up to five seconds for connection refusal instead of assuming the OS
+has finished closing immediately.
+
+Additional regressions cover reusing port-zero configuration while the previous
+port is occupied, fixed-port concurrency, and transient binding failure. The
+occupied-previous-port test was verified to fail against the prior implementation.
+The updated full suite passed in a disposable Linux/JDK 17 container, including
+both fixed and automatically assigned ports.
+
+### Existing contributor pull requests
+
+Jonathan Leitschuh's [#23](https://github.com/matlux/jvm-breakglass/pull/23) and
+[#25](https://github.com/matlux/jvm-breakglass/pull/25) independently supplied the
+HTTPS repository fix now covered by #27. Acknowledge and close these duplicates
+after #27 merges. Eugen Stan's [#24](https://github.com/matlux/jvm-breakglass/pull/24)
+is a useful predecessor for the next dependency migration: maintained nREPL,
+`spring-context`, optional filesystem utilities, and localhost binding. His
+contribution has been acknowledged; retain it until the replacement dependency
+upgrade covers its remaining work and credit it in that migration.

@@ -3,6 +3,9 @@ package net.matlux;
 import clojure.lang.RT;
 import clojure.lang.Keyword;
 import clojure.lang.Symbol;
+import java.net.ConnectException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.ArrayList;
@@ -39,7 +42,7 @@ public class AppIT {
     }
 
     @Test(timeout = 30000)
-    public void evaluatesMultipleFormsAndRegisteredObjectsOverSocket() {
+    public void evaluatesMultipleFormsAndRegisteredObjectsOverSocket() throws Exception {
         server = new NreplServer(0, true, false, true, false);
         assertTrue(server.getPort() > 0);
         Map<?, ?> handle = (Map<?, ?>) RT.var("net.matlux.server.nrepl", "server").deref();
@@ -49,7 +52,36 @@ public class AppIT {
         assertEval("(2 42 \"hello\")", "(+ 1 1) (* 6 7) (.getObj net.matlux.NreplServer/instance \"value\")");
         assertTrue(server.stop());
         assertFalse(server.isStarted());
+        assertTrue(listener.isClosed());
+        awaitConnectionRefused(server.getPort());
         assertEquals("cannot connect", evaluate("(+ 1 1)"));
+    }
+
+    private void awaitConnectionRefused(int port) throws Exception {
+        // A native accept may still be unwinding when ServerSocket.close returns.
+        long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(5);
+        while (System.nanoTime() < deadline) {
+            try (Socket connection = new Socket()) {
+                connection.connect(new InetSocketAddress("127.0.0.1", port), 200);
+            } catch (ConnectException stopped) {
+                return;
+            }
+            Thread.sleep(10);
+        }
+        fail("Stopped listener still accepts connections on " + port);
+    }
+
+    @Test(timeout = 30000)
+    public void automaticPortSelectionSurvivesRestartWhenPreviousPortIsOccupied() throws Exception {
+        server = new NreplServer(0, true, false, true, false);
+        int previousPort = server.getPort();
+        server.stop();
+        awaitConnectionRefused(previousPort);
+        try (ServerSocket occupied = new ServerSocket(previousPort, 0, InetAddress.getByName("127.0.0.1"))) {
+            assertTrue(server.start());
+            assertNotEquals(previousPort, server.getPort());
+            assertEval("(42)", "(+ 40 2)");
+        }
     }
 
     @Test(timeout = 30000)
@@ -73,6 +105,7 @@ public class AppIT {
         assertFalse(server.isStarted());
         assertTrue(server.start());
         int boundPort = server.getPort();
+        server.setPort(boundPort);
         assertTrue(server.start());
         assertEquals(boundPort, server.getPort());
         assertEval("(42)", "(+ 40 2)");
@@ -102,6 +135,17 @@ public class AppIT {
     @Test(timeout = 60000)
     public void concurrentStartStopPropagatesWorkerFailures() throws Exception {
         server = new NreplServer(0, false, false, true, false);
+        exerciseConcurrentLifecycle();
+    }
+
+    @Test(timeout = 60000)
+    public void concurrentStartStopOnFixedPort() throws Exception {
+        server = new NreplServer(0, true, false, true, false);
+        server.setPort(server.getPort());
+        exerciseConcurrentLifecycle();
+    }
+
+    private void exerciseConcurrentLifecycle() throws Exception {
         ExecutorService executor = Executors.newFixedThreadPool(4);
         CountDownLatch ready = new CountDownLatch(4);
         CountDownLatch begin = new CountDownLatch(1);

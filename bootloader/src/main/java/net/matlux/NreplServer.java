@@ -41,6 +41,7 @@ public class NreplServer implements Map<String,Object>, NreplMBean
 	private final boolean logExceptionStack;
 	private final boolean propagateException;
 	private volatile int port;
+	private int requestedPort;
 
 
     /**
@@ -53,6 +54,7 @@ public class NreplServer implements Map<String,Object>, NreplMBean
      */
 	public NreplServer(int port, boolean startOnCreation, boolean registerMBeanOnCreation, boolean propagateException, boolean logExceptionStack) {
 		this.port = port;
+		this.requestedPort = port;
 		this.propagateException = propagateException;
 		this.logExceptionStack = logExceptionStack;
 		LOGGER.info("Creating ReplStartup for Port=" + port);
@@ -99,18 +101,22 @@ public class NreplServer implements Map<String,Object>, NreplMBean
 
 	@Override
     public boolean start() {
-		try {
-			Map<?, ?> started = (Map<?, ?>) START_REPL_SERVER.invoke(port);
-			port = ((Number) started.get(Keyword.intern("port"))).intValue();
-			LOGGER.info("Repl started successfully on Port = " + port);
-		} catch (Throwable t) {
-			if (logExceptionStack) LOGGER.log(Level.SEVERE, "Repl startup caught an error", t);
-			else LOGGER.log(Level.INFO, "Repl startup caught an error");
-			if (propagateException) throw new RuntimeException("Repl startup caught an error", t);
-			return false;
-		}
-		return true;
-	}
+        // Use the same lock as the Clojure lifecycle and publish the bound port
+        // before another start/stop can replace this listener.
+        synchronized (SERVER) {
+            try {
+                Map<?, ?> started = (Map<?, ?>) START_REPL_SERVER.invoke(requestedPort);
+                port = ((Number) started.get(Keyword.intern("port"))).intValue();
+                LOGGER.info("Repl started successfully on Port = " + port);
+            } catch (Throwable t) {
+                if (logExceptionStack) LOGGER.log(Level.SEVERE, "Repl startup caught an error", t);
+                else LOGGER.log(Level.INFO, "Repl startup caught an error");
+                if (propagateException) throw new RuntimeException("Repl startup caught an error", t);
+                return false;
+            }
+            return true;
+        }
+    }
 
 	@Override
 	public boolean stop() {
@@ -133,7 +139,10 @@ public class NreplServer implements Map<String,Object>, NreplMBean
 
 	@Override
 	public void setPort(int port) {
-		this.port = port;
+        synchronized (SERVER) {
+            this.requestedPort = port;
+            this.port = port;
+        }
 	}
 
 	@Override
