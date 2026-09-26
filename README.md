@@ -187,6 +187,6 @@ Maintainers can follow the [release procedure](docs/releasing.md).
 
 ## License
 
-Copyright (C) 2015 Mathieu Gauthron
+Copyright (C) 2015–2026 Mathieu Gauthron
 
 Distributed under the Eclipse Public License, the same as Clojure.
