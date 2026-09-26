@@ -20,8 +20,8 @@ jobs:
           distribution: temurin
           java-version: ${{ matrix.java }}
           cache: maven
-      - name: Unit and integration tests
-        run: mvn -B -f bootloader/pom.xml -Dclojure.version=${{ matrix.clojure }} clean verify
+      - name: Unit and integration tests and release artifacts
+        run: mvn -B -f bootloader/pom.xml -Prelease -Dclojure.version=${{ matrix.clojure }} clean verify
       - uses: actions/upload-artifact@v4
         if: always()
         with:
