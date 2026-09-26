@@ -18,8 +18,8 @@ The repository has five independent Maven builds, with no root reactor:
 - `examples/server` and `examples/server-no-spring`: console demonstrations.
 - `examples/SpringMVC` and `examples/SpringMVCrest`: legacy WAR demonstrations.
 
-The bootloader version is `0.0.9-SNAPSHOT`, while examples resolve published
-`0.0.6`/`0.0.7` artifacts. Building an example therefore does **not** test changes
+At the time of the audit, the bootloader version was `0.0.9-SNAPSHOT`, while
+examples resolved published `0.0.6`/`0.0.7` artifacts. Building an example therefore does **not** test changes
 to this checkout. Launch scripts also hard-code older dependency JAR paths.
 
 ## Dependency inventory
@@ -104,8 +104,8 @@ They have been preserved and the live mutation scenario remains tested.
 
 ## GitHub issues
 
-Four open issues were found; their changes are implemented in this branch.
-The pull request links these issues for closure when the changes are merged.
+Four open issues were addressed and closed by
+[PR #27](https://github.com/matlux/jvm-breakglass/pull/27), merged on 2026-09-26.
 
 | Issue | Resolution in this checkout |
 | --- | --- |
@@ -120,10 +120,11 @@ scenario from closed issues are retained in the replacement tests.
 
 ## Recommended sequence
 
-1. **Land the test foundation and fixes in this change.** Review Java 8 and
-   loopback binding compatibility changes. Run the configured 8/17/21/25 matrix
-   with both Clojure 1.6.0 and 1.12.6 before merging; do not interpret a passing modern JVM test as vendor support
-   for Spring 3 or tools.nrepl 0.2.6.
+1. **Test foundation and fixes: completed in PR #27.** The configured
+   8/17/21/25 matrix passed with both Clojure 1.6.0 and 1.12.6 before merging.
+   A passing modern JVM test does not imply vendor support for Spring 3 or
+   tools.nrepl 0.2.6. Release preparation is recorded in
+   [the 0.1.0 checkpoint](docs/changes/2026-09-26-release-preparation.md).
 2. **Upgrade Clojure and nREPL together.** Use Clojure 1.12.6 and nREPL 1.7.0,
    changing server/client imports from `clojure.tools.nrepl[.server]` to
    `nrepl.core`/`nrepl.server`. Test both this client and editor/Lein clients,
@@ -232,8 +233,8 @@ both fixed and automatically assigned ports.
 
 Jonathan Leitschuh's [#23](https://github.com/matlux/jvm-breakglass/pull/23) and
 [#25](https://github.com/matlux/jvm-breakglass/pull/25) independently supplied the
-HTTPS repository fix now covered by #27. Acknowledge and close these duplicates
-after #27 merges. Eugen Stan's [#24](https://github.com/matlux/jvm-breakglass/pull/24)
+HTTPS repository fix covered by #27. Both contributions were acknowledged and
+the duplicate PRs closed after #27 merged on 2026-09-26. Eugen Stan's [#24](https://github.com/matlux/jvm-breakglass/pull/24)
 is a useful predecessor for the next dependency migration: maintained nREPL,
 `spring-context`, optional filesystem utilities, and localhost binding. His
 contribution has been acknowledged; retain it until the replacement dependency
