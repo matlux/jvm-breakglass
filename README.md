@@ -1,8 +1,30 @@
 nRepl hook for Java
 ===================
 
-[![Build Status](https://travis-ci.org/matlux/jvm-breakglass.svg?branch=master)](https://travis-ci.org/matlux/jvm-breakglass)
+[![Build](https://github.com/matlux/jvm-breakglass/actions/workflows/build.yml/badge.svg)](https://github.com/matlux/jvm-breakglass/actions/workflows/build.yml)
 [![Clojars Project](http://clojars.org/net.matlux/jvm-breakglass/latest-version.svg)]
+
+Build and upgrade status
+------------------------
+
+See [UPGRADE.md](UPGRADE.md) for the dependency audit, issue mapping, and staged
+migration plan. The build now requires **JDK 8+ and Maven 3.9+**, and emits Java 8
+bytecode. Production dependency versions remain on the legacy baseline while
+upgrade compatibility is evaluated.
+
+From the repository root:
+
+```sh
+mvn -f bootloader/pom.xml clean verify     # Java/Clojure unit + socket/Spring/JMX integration tests
+mvn -f bootloader/pom.xml test             # unit tests only
+mvn -f bootloader/pom.xml javadoc:javadoc  # bootloader/target/reports/apidocs
+mvn -f bootloader/pom.xml -Dclojure.version=1.12.6 clean verify
+```
+
+Clojure tests run through a JUnit bridge so failures fail Maven. Integration tests
+use OS-assigned ports, bounded waits, checked worker futures, and cleanup on failure.
+The CI matrix covers Java 8, 17, 21 and 25 with Clojure 1.6.0 and 1.12.6. The four historical example applications still need the migrations in
+UPGRADE.md and are not part of this build.
 
 Background on nRepl
 -------------------
@@ -42,7 +64,7 @@ How to install the REPL in your application with Spring
 </bean>
 ```
 
-1112 is the port number.
+1112 is the port number. For lifecycle control and cleanup, see the JMX examples below.
 
 What if I don't use Spring?
 ---------------------------
@@ -50,8 +72,9 @@ What if I don't use Spring?
 No problems, just instanciate the following class in your application rather than using the xml spring context:
 ```java
     import net.matlux.NreplServer;
-    new NreplServer(port) //start server listening onto port number
-    .put("department",myObject);
+    NreplServer repl = new NreplServer(port);
+    repl.put("department", myObject);
+    // At application shutdown: repl.stop(); repl.unregisterMBean();
 ```
 
 Repeat the call to put with as many object as you want to register on the repl. The NreplServer instance is a Map onto which you can add Object instances that you can retreive later on under the repl access.
@@ -65,10 +88,63 @@ It is also possible to register the NreplServer as MBean for access via a JMX co
 |----|----|-------|
 |Attribute|Port|Indicates the port used for the nrepl server (read/write).|
 |Attribute|Started|Indicates wether the NreplServer is started or not (read only).|
-|Operation|Start|Starts the NreplServer.|
-|Operation|Stop|Stops the NreplServer.|
+|Operation|start|Starts the NreplServer.|
+|Operation|stop|Stops the NreplServer.|
 
-The registration/unregistration of the NReplServer to the MBeanServer must be done manually via the methods `NReplServer#registerMBean` and `NReplServer#unregisterMBean`. If you are using the NReplServer with Spring, these operations are typically preformed post construction and pre destruction.
+The one-argument constructor starts the listener and registers this MBean automatically.
+For an on-demand JMX switch, register the MBean while leaving the listener stopped:
+
+```java
+NreplServer repl = new NreplServer(1112, false, true, true, true);
+repl.put("department", myDepartment);
+// Keep repl for the lifetime of the application.
+// During shutdown, even if application work fails:
+try {
+    repl.stop();
+} finally {
+    repl.unregisterMBean();
+}
+```
+
+In JConsole, attach to the local application JVM, open **MBeans → net.matlux → Nrepl**,
+then invoke the lowercase `start` operation. `Started` becomes true. Connect with
+`lein repl :connect 127.0.0.1:1112`; invoke `stop` when finished. Change the `Port`
+attribute before the next `start` to choose another port. Port `0` asks the OS to
+choose one on each start; read `Port` after starting to see the result.
+
+The equivalent Spring bean leaves the REPL stopped until JMX starts it:
+
+```xml
+<bean id="repl" class="net.matlux.NreplServerSpring" destroy-method="stop">
+  <constructor-arg index="0" value="1112" />
+  <constructor-arg index="1" value="false" /> <!-- startOnCreation -->
+  <constructor-arg index="2" value="true" />  <!-- registerMBeanOnCreation -->
+  <constructor-arg index="3" value="true" />  <!-- propagateException -->
+  <constructor-arg index="4" value="true" />  <!-- logExceptionStack -->
+</bean>
+```
+
+Closing the Spring context invokes `stop`. The application must also unregister
+its MBean during shutdown (keep a reference to the bean before closing):
+
+```java
+NreplServerSpring repl = context.getBean("repl", NreplServerSpring.class);
+try {
+    context.close();
+} finally {
+    repl.unregisterMBean();
+}
+```
+
+There is one shared listener and one MBean name per class loader/platform server
+respectively. Starting another instance replaces the listener; stopping any
+instance stops it. Lifecycle calls are serialized, but the object registry is a
+`HashMap`: coordinate concurrent access in the hosting application.
+
+The listener now binds to **127.0.0.1**. nREPL permits arbitrary code execution in
+the host JVM and has no authentication here. For remote access, use an SSH tunnel:
+`ssh -L 1112:127.0.0.1:1112 user@host`, then connect to local port 1112.
+This is a deliberate change from the old all-interfaces binding.
 
 
 Quick demonstration of this project
@@ -121,9 +197,9 @@ Notes: You don't need to be inside the current directory of any particular proje
 * Copy and past the following commands
 
 ```clojure
-  (use 'cl-java-introspector.spring)
-  (use 'cl-java-introspector.core)
-  (use 'me.raynes.fs)
+  (require '[cl-java-introspector.spring :as spring])
+  (require '[cl-java-introspector.core :as inspect])
+  (require '[me.raynes.fs :as fs])
 
 ```
 
@@ -131,13 +207,13 @@ Notes: You don't need to be inside the current directory of any particular proje
 
 ```clojure
   ;list beans
-  (get-beans)
+  (spring/get-beans)
 
   ;find a bean or an object
-  (get-bean "department")
+  (spring/get-bean "department")
 
   ;what methods or fields has the obj?
-  (methods-info  (get-bean "department"))
+  (inspect/methods-info  (spring/get-bean "department"))
 
 ```
 
@@ -176,8 +252,8 @@ Quick demonstration of a standard Java Server example
 * Copy and past the following commands
 
 ```clojure
-  (use 'cl-java-introspector.core)
-  (use 'me.raynes.fs)
+  (require '[cl-java-introspector.core :as inspect])
+  (require '[me.raynes.fs :as fs])
 
 ```
 
@@ -185,13 +261,13 @@ Quick demonstration of a standard Java Server example
 
 ```clojure
   ;list objs
-  (get-objs)
+  (inspect/get-objs)
 
   ;find a bean or an object
-  (get-obj "department")
+  (inspect/get-obj "department")
 
   ;what methods or fields has the obj?
-  (methods-info  (get-obj "departement"))
+  (inspect/methods-info  (inspect/get-obj "department"))
 
 ```
 
@@ -246,35 +322,35 @@ This example filters on a regex. It retrieves property keys which start with "su
 ## list bean or objects
 
 ```Clojure
-  (get-beans) ; spring example
-  (get-objs)  ; standard java example
+  (spring/get-beans) ; spring example
+  (inspect/get-objs)  ; standard java example
 ```
 
 ## retrieve a bean or an object by name
 
 ```clojure
-  (get-bean "department")  ; spring example
-  (get-obj "department")   ; standard java example
+  (spring/get-bean "department")  ; spring example
+  (inspect/get-obj "department")   ; standard java example
 ```
 
 keep the object reference
 ```clojure
-  (def myobj (get-bean "department")) ; spring example
+  (def myobj (spring/get-bean "department")) ; spring example
   ;;or
-  (def myobj (get-obj "department")) ; standard java example
+  (def myobj (inspect/get-obj "department")) ; standard java example
 ```
 
 ## what methods or fields has the obj?
 
 ```clojure
-  (methods-info  myobj)
-  (fields-info  myobj)
+  (inspect/methods-info  myobj)
+  (inspect/fields-info  myobj)
 ```
 
 ## show the content of the fields the obj
 
 ```clojure
-  (to-tree  myobj)
+  (inspect/to-tree  myobj)
 ```
 
 ## Terminate the process ;)
@@ -318,7 +394,7 @@ Your application needs to have a dependency on Oracle Coherence, The binary and 
 ## Introspect into a Java Object
 
 ```clojure
-    (to-tree myObject)
+    (inspect/to-tree myObject)
 ```
 
 For example:

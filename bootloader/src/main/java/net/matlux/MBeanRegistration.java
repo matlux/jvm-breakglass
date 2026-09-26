@@ -11,10 +11,17 @@ import java.lang.management.ManagementFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/** Registers the nREPL switch with the platform MBean server. */
 public final class MBeanRegistration {
 
 	private static final Logger LOGGER = Logger.getLogger(MBeanRegistration.class.getSimpleName());
 
+    /**
+     * Registers a switch under the shared object name.
+     * @param nreplServer switch to expose
+     * @param logExceptionStack whether to include stack traces in error logs
+     * @throws RuntimeException if registration fails, including duplicate names
+     */
 	public static void registerNreplServerAsMBean(NreplMBean nreplServer, boolean logExceptionStack) {
 		try {
 			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
@@ -27,6 +34,11 @@ public final class MBeanRegistration {
 		}
 	}
 
+    /**
+     * Removes the switch from the platform server.
+     * @param logExceptionStack whether to include stack traces in error logs
+     * @throws RuntimeException if no switch is registered or removal fails
+     */
 	public static void unregisterNreplServerAsMBean(boolean logExceptionStack) {
 		try {
 			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
@@ -39,6 +51,11 @@ public final class MBeanRegistration {
 		}
 	}
 
+    /**
+     * Returns the object name used for registration and JMX lookups.
+     * @return the shared name {@code net.matlux:name=Nrepl}
+     * @throws MalformedObjectNameException if the object name is invalid
+     */
 	public static ObjectName getObjectName() throws MalformedObjectNameException {
 		return new ObjectName("net.matlux:name=Nrepl");
 	}

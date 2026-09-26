@@ -6,55 +6,57 @@
    (import '(net.matlux NreplServerSpring))
    (import '(net.matlux NreplServer))
 
-   (use 'cl-java-introspector.spring)
-   (use 'cl-java-introspector.core)
+   (require '[cl-java-introspector.spring :as spring])
+   (require '[cl-java-introspector.core :as inspect])
    (import 'net.matlux.testobjects.Address)
-   (use 'clojure.reflect 'clojure.pprint 'clojure.java.javadoc)
-   (use 'me.raynes.fs))
+   (require '[clojure.reflect :as reflect]
+            '[clojure.pprint :as pprint]
+            '[clojure.java.javadoc :as javadoc])
+   (require '[me.raynes.fs :as fs]))
 
   ;;intro
   (System/getProperties)
-  (list-dir ".")
-  *cwd*
+  (fs/list-dir ".")
+  fs/*cwd*
     ;;demonstrate how we can search through ns to find a function of a lib like "fs"
   (->> (ns-map *ns*) (filter #(re-find #"fs" (.toString (val %)))) (map key))
 
 
   ;;demonstrate a shell like pipping with aiming for this:
-  (find-files ".." #".*")
-  (->> (find-files ".." #".*") (map absolute-path) (filter #(and (re-find #"conf" %) (directory? %))))
+  (fs/find-files ".." #".*")
+  (->> (fs/find-files ".." #".*") (map fs/absolute-path) (filter #(and (re-find #"conf" %) (fs/directory? %))))
 
   ;do following twice:
   ;list beans
-  (get-objs)  ; standard java example
-  (get-beans) ; spring example
+  (inspect/get-objs)  ; standard java example
+  (spring/get-beans) ; spring example
   ;retrieve a bean or an object
-  (get-bean "reportController") ; spring example
-  (get-bean "department") ; spring example  ( 8 mins)
-  (get-obj "department")  ; standard java example
+  (spring/get-bean "reportController") ; spring example
+  (spring/get-bean "department") ; spring example  ( 8 mins)
+  (inspect/get-obj "department")  ; standard java example
 
   ; can we see inside private members?
-  (bean (get-bean "department"))
-  (to-tree (get-bean "department"))
-  (obj2map (get-bean "department") 5)
+  (bean (spring/get-bean "department"))
+  (inspect/to-tree (spring/get-bean "department"))
+  (inspect/obj2map (spring/get-bean "department") 5)
 
 
   ;;what methods or fields has the obj?
-  (methods-info  (get-bean "department"))
-  (fields-info  (get-bean "department"))
+  (inspect/methods-info  (spring/get-bean "department"))
+  (inspect/fields-info  (spring/get-bean "department"))
 
 
   ; what is the bug?
-  (->> (get-obj "department") .getEmployees)
+  (->> (inspect/get-obj "department") .getEmployees)
   ; get hold of the two employees
-  (->> (get-obj "department") .getEmployees (map #(vector (keyword (.getFirstname %)) %)) (into {}))
-  (->> (get-obj "department") .getEmployees (group-by #(keyword (.getFirstname %))))
-  (def employees (->> (get-obj "department") .getEmployees (into []) (map #(vector (keyword (.getFirstname %)) %)) (into {})))
+  (->> (inspect/get-obj "department") .getEmployees (map #(vector (keyword (.getFirstname %)) %)) (into {}))
+  (->> (inspect/get-obj "department") .getEmployees (group-by #(keyword (.getFirstname %))))
+  (def employees (->> (inspect/get-obj "department") .getEmployees (into []) (map #(vector (keyword (.getFirstname %)) %)) (into {})))
 
   (:Mick employees)
-  (methods-info (:Mick employees))
+  (inspect/methods-info (:Mick employees))
   (->> (:Mick employees) .getAddress)
-  (->> (:Mick employees) .getAddress methods-info)
+  (->> (:Mick employees) .getAddress inspect/methods-info)
   ;; here it is:
   (->> (:Mick employees) .getAddress .getCity)
   (->> (:Mick employees) .getAddress .getStreet)
@@ -83,14 +85,14 @@
 
 
   ;how about using clojure as a remote shell and listing some files?
-  (list-dir ".")
-  *cwd*
-  (hidden? ".")
-  (hidden? "pom.xml")
-  (hidden? ".classpath")
-  (directory? ".classpath")
-  (directory? ".")
-  (filter #(directory? (str "../" %)) (list-dir ".."))
+  (fs/list-dir ".")
+  fs/*cwd*
+  (fs/hidden? ".")
+  (fs/hidden? "pom.xml")
+  (fs/hidden? ".classpath")
+  (fs/directory? ".classpath")
+  (fs/directory? ".")
+  (filter #(fs/directory? (str "../" %)) (fs/list-dir ".."))
 
   ;;demonstrate how we can search through ns to find a function of a lib like "fs"
   (->> (ns-map *ns*) (filter #(re-find #"fs" (.toString (val %)))) (map key))
@@ -102,14 +104,14 @@
 
 ;(get-obj-methods "")
 ;(->> NreplServerStartup/instance get-member-fields first second get-member-fields)
-;(->> NreplServerStartup/instance get-member-fields first second to-tree )
-;(->> NreplServerStartup/instance get-member-fields first second to-tree :department get-obj-methods first bean)
-;(->> (to-tree NreplServerStartup/instance) :objMap :department :employees second :lastname)
+;(->> NreplServerStartup/instance get-member-fields first second inspect/to-tree )
+;(->> NreplServerStartup/instance get-member-fields first second inspect/to-tree :department get-obj-methods first bean)
+;(->> (inspect/to-tree NreplServerStartup/instance) :objMap :department :employees second :lastname)
 
-  (->> (get-obj "department") .getEmployees (map #(.getAddress %)) )
-  (->> (get-obj "department") .getEmployees (map #(.getAddress %)) first)
-  (->> (get-obj "department") .getEmployees (map #(.getAddress %)) first methods-info)
-  (->> (get-obj "department") .getEmployees (map #(->> (.getAddress %) .getCity)) )
+  (->> (inspect/get-obj "department") .getEmployees (map #(.getAddress %)) )
+  (->> (inspect/get-obj "department") .getEmployees (map #(.getAddress %)) first)
+  (->> (inspect/get-obj "department") .getEmployees (map #(.getAddress %)) first inspect/methods-info)
+  (->> (inspect/get-obj "department") .getEmployees (map #(->> (.getAddress %) .getCity)) )
 
 
 )
