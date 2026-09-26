@@ -1,6 +1,6 @@
 # Release notes
 
-## 0.1.0 — pending publication
+## 0.1.0 — 2026-09-26
 
 This release updates the build, fixes listener lifecycle problems and establishes
 unit and integration coverage. It follows the published 0.0.8 release.

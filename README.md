@@ -7,11 +7,9 @@ Embed an nREPL server in a Java application to inspect live objects and evaluate
 Clojure expressions inside its JVM. Register objects directly or access beans
 from a Spring application context, and control the listener through JMX.
 
-This guide describes **0.1.0 (unreleased)**, which requires Java 8 or later.
-Until it is published, build and install it from source using the
-[module build instructions](bootloader/README.md). The badge links to the version
-currently available on Clojars. See [release notes](CHANGELOG.md) for changes
-from 0.0.8, including the move to loopback-only listening.
+Version **0.1.0** is available on [Clojars](https://clojars.org/net.matlux/jvm-breakglass/versions/0.1.0)
+and requires Java 8 or later. See [release notes](CHANGELOG.md) for changes from
+0.0.8, including the move to loopback-only listening.
 
 The library still depends on Clojure 1.6.0 and tools.nrepl 0.2.6 by default.
 Spring integration is compiled against Spring 3; the host application supplies
