@@ -105,8 +105,23 @@ unreleased notice, and create a GitHub release for the existing tag using those
 notes. In a follow-up development commit, advance the POM to the next `-SNAPSHOT`
 version and set its SCM tag to `HEAD`. Keep consumer examples on the stable version.
 
+## Updating hosted documentation after publication
+
+`docs/cljdoc.edn` selects the README, changelog and historical examples for
+cljdoc. Maintainer procedures and preparation records remain on GitHub, outside
+the hosted documentation's article navigation.
+
+For article or navigation corrections to an existing release, commit the changes
+and create a separate `cljdoc-<version>` tag at that commit (for example,
+`cljdoc-0.1.0`). Push that tag, then use **Build** on the version's cljdoc page,
+or **Rebuild** if documentation already exists. Cljdoc reads the articles and
+table of contents from this override tag while analysing the published library.
+Leave the original `R_<version>` tag unchanged; no Clojars redeployment is needed.
+Changes to code or API docstring content require a new library release.
+
 ## References
 
 - [Clojars publishing and validations](https://github.com/clojars/clojars-web/wiki/Pushing)
 - [Deploy tokens](https://github.com/clojars/clojars-web/wiki/Deploy-Tokens)
 - [Maven deployment repository override](https://maven.apache.org/plugins/maven-deploy-plugin/deploy-mojo.html)
+- [Cljdoc documentation overrides](https://github.com/cljdoc/cljdoc/blob/master/doc/userguide/for-library-authors.adoc#overriding-cljdoc-config--articles)

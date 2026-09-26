@@ -41,9 +41,21 @@ are not project documentation.
 - PR #27 passed the Java/Clojure CI matrix before merge. The release-profile
   changes still need their own CI run; the local checks above do not replace it.
 
+## Publication checkpoint — 2026-09-26
+
+- [PR #28](https://github.com/matlux/jvm-breakglass/pull/28) was squash-merged as
+  `070d2873bbee5ca9f73a7017d9d57eb9ccc74103`. Both the PR matrix and the
+  [master build](https://github.com/matlux/jvm-breakglass/actions/runs/36262727913)
+  passed. Tag `R_0.1.0` identifies this revision.
+- The maintainer published 0.1.0 to Clojars. The repository API and published POM
+  confirm the version and release tag.
+- Follow-up documentation marks the release published and explicitly selects
+  consumer articles in `docs/cljdoc.edn`. The maintainer procedure and this record
+  are excluded from cljdoc's article navigation.
+
 ## Remaining release work
 
-Review and commit the preparation, run CI, merge, tag the verified revision,
-publish to Clojars, and verify a fresh consumer download. Then record the release
-date and advance the development version. Update this record at publication or
-if the release scope changes; do not treat it as a continually current status page.
+Verify a fresh consumer download, commit the documentation changes, publish the
+`cljdoc-0.1.0` documentation tag, and build or rebuild cljdoc. Create the GitHub
+release and advance the development version separately. Update this record at
+those checkpoints or if the scope changes.
